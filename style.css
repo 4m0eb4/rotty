@@ -1,0 +1,3109 @@
+/* style.css (V11 - Background & Ignore Support, plus new command styles - FINAL CHAT HEADER FLEXBOX LAYOUT) */
+
+/* --- General & Font Setup --- */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+}
+body {
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    /* New Background Image */
+    background-color: #111;
+    background-image: url('dark-matter.png');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+}
+body.frame-body {
+    background-color: transparent;
+    padding: 0;
+    display: block;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* --- Main Container --- */
+.chat-container {
+    width: 95%;
+    max-width: 1200px;
+    height: 95vh;
+    background-color: rgba(10, 10, 10, 0.75);
+    backdrop-filter: blur(5px);
+    position: relative;
+    isolation: isolate; 
+    border: 1px solid var(--dynamic-border-color);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+/* --- Header (REDONE FOR FLEXBOX LAYOUT) --- */
+.chat-header {
+    padding: 10px 20px;
+    background-color: #1a1a1a;
+    border-bottom: 2px solid var(--dynamic-border-color);
+    flex-shrink: 0;
+
+    /* --- FLEXBOX LAYOUT FOR HEADER CONTENTS --- */
+    display: flex; /* Make the header a flex container */
+    justify-content: space-between; /* Pushes items to ends, spaces out title */
+    align-items: center; /* Vertically center items */
+    position: relative; /* Keep relative for title centering if needed, though flex handles most */
+}
+
+.chat-header h1 {
+    margin: 0; /* Remove default margin to help centering */
+    font-family: 'Courier Prime', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1.5em;
+    /* Flexbox will naturally center it if other items take up equal space,
+       or you can add margin: auto; to push it to center if necessary.
+       For now, let justify-content: space-between handle it. */
+    text-align: center; /* Ensure text itself is centered */
+    flex-grow: 1; /* Allow the title to grow and push buttons */
+}
+
+/* --- Left-aligned Buttons Container --- */
+.header-buttons-left {
+    display: flex; /* Make this a flex container */
+    align-items: center; /* Vertically center buttons within this group */
+    gap: 5px; /* Space between buttons */
+    flex-shrink: 0; /* Prevent it from shrinking */
+}
+
+/* --- Right-aligned Buttons Container (updated) --- */
+.header-buttons-right {
+    display: flex; /* Make this a flex container */
+    align-items: center; /* Vertically center buttons within this group */
+    gap: 10px; /* Space between buttons */
+    flex-shrink: 0; /* Prevent it from shrinking */
+}
+
+/* --- Button Base Styles (simplified, no absolute positioning needed here) --- */
+.toggle-button,
+.rules-button,
+.toggle-profile-button,
+.logout-header-button {
+    background: #333;
+    color: #ccc; /* Default color for all these buttons */
+    border: 1px solid #555;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    line-height: 35px; /* Center text vertically */
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: center; /* Center text horizontally */
+    font-size: 1.2em; /* Default font size for icons/text */
+    flex-shrink: 0; /* Prevent buttons from shrinking */
+    /* REMOVED: position: absolute, left, top, transform, z-index from these classes */
+}
+
+.toggle-button:hover,
+.toggle-profile-button:hover,
+.logout-header-button:hover {
+    background: #444;
+    color: #fff; /* Hover color for generic buttons */
+    border-color: #ff5555; /* Add a subtle red border on hover */
+}
+
+/* Keyframes for the new glow animation */
+@keyframes soft-red-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(204, 0, 0, 0.5), inset 0 0 3px rgba(255, 85, 85, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(204, 0, 0, 0.8), inset 0 0 5px rgba(255, 85, 85, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(204, 0, 0, 0.5), inset 0 0 3px rgba(255, 85, 85, 0.2);
+  }
+}
+
+/* Specific styles for Rules Button */
+.rules-button {
+    color: #ff5555; /* Changed to red */
+    font-size: 1.5em; 
+    font-weight: bold;
+    font-family: 'Times New Roman', serif;
+    /* Apply the animation */
+    animation: soft-red-glow 2.5s infinite ease-in-out;
+}
+
+.rules-button:hover {
+    background: #555;
+    color: #fff; /* Brighter on hover */
+    border-color: #ff5555; /* Match border to text */
+}
+
+/* Specific styles for Logout Button */
+.logout-header-button {
+    color: #ff5555; /* Red color for 'X' */
+}
+.logout-header-button:hover {
+    background: #555;
+    color: #fff; /* White on hover */
+    border-color: #ff5555; /* Red border on hover */
+}
+
+/* --- iFrame Layout --- */
+.main-content { flex-grow: 1; display: flex; overflow: hidden; }
+.chatters-frame { width: 250px; flex-shrink: 0; border: none; border-right: 1px solid #444; background-color: #111; transition: width 0.3s ease, opacity 0.3s ease, border 0.3s ease; }
+.messages-frame {
+    flex-grow: 1;
+    border: none;
+    background-color: #1a1a1a;
+    /* ADDED PROPERTIES FOR TRANSITION */
+    width: 100%;
+    opacity: 1;
+    transition: width 0.3s ease, opacity 0.2s ease, flex-grow 0.3s ease;
+    overflow: hidden;
+}
+.profile-frame { width: 0; flex-shrink: 0; border: none; background-color: #111; transition: width 0.3s ease, opacity 0.3s ease, border 0.3s ease; opacity: 0; }
+.input-frame { flex-shrink: 0; height: 70px; border: none; border-top: 1px solid #444; background-color: #1a1a1a; }
+.admin-footer { padding: 8px; text-align: center; background-color: #330000; font-size: 0.9em; flex-shrink: 0; }
+.admin-footer a { color: #ffaaaa; text-decoration: none; font-weight: bold; }
+
+/* --- Collapsed/Expanded States --- */
+#toggle-chatters-checkbox:checked ~ .main-content .chatters-frame { width: 0; border-right: none; opacity: 0; }
+#toggle-profile-checkbox:checked ~ .main-content .profile-frame { width: 240px; border-left: 1px solid #444; opacity: 1; }
+
+/* --- Chatters List (inside iframe) --- */
+
+.chatters-list h3 { margin: 0 0 10px 0; padding-bottom: 5px; border-bottom: 1px solid #444; color: #ff5555; font-size: 1em; }
+.chatters-list ul { margin: 0; padding: 0; list-style: none; }
+.chatters-list li { margin-bottom: 2px; font-size: 0.9em; }
+.logged-in-as { color: #999; font-size: 0.9em; text-align: left; margin: -5px 0 15px 0; padding-bottom: 10px; border-bottom: 1px solid #444; font-weight: normal; }
+
+/* --- Messages Area (inside iframe) --- */
+.chat-messages { padding: 15px; }
+.msg-line { position: relative; line-height: 1.5; word-wrap: break-word; padding: 8px 65px 8px 0; border-bottom: 1px solid #282828; }
+.msg-line:last-child { border-bottom: none; }
+.msg-line.system { text-align: center; border-bottom: none; padding-right: 0; }
+.msg-line.system em { color: #999; font-style: italic; }
+.msg-line small { color: #888; margin-right: 5px; }
+
+/* --- Announcement & Notification Bars --- */
+.announcement-bar, .notification-bar {
+    display: flex;
+    align-items: left;
+    padding: 8px 15px;
+    font-size: 0.95em;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.announcement-bar { background-color: #4d0000; color: #ffc2c2; border-top: 1px solid #800; border-bottom: 1px solid #800; }
+
+/* Specific style for the NEW notification bar */
+.notification-bar {
+    background-color: #003300; /* Dark green background for notification */
+    color: #c2ffc2; /* Light green text */
+    border-bottom: 1px solid #006600;
+    border-top: none; /* No top border if it's directly below the header */
+    text-align: left;
+    justify-content: left; /* Center content horizontally */
+}
+
+.announcement-message { flex-grow: 1; text-align: left; }
+.announcement-notes-button { flex-shrink: 0; padding: 5px 10px; margin-left: 10px; border: 1px solid #ff5555; background-color: #610000; color: #fff; border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: bold; font-size: 0.9em; }
+.announcement-notes-button:hover { background-color: #8b0000; }
+
+/* --- Chat Form (inside input iframe) --- */
+input[type="text"], input[type="password"] { flex-grow: 1; padding: 10px; border: 1px solid #660000; border-radius: 5px; background-color: #222; color: #e0e0e0; font-size: 1em; }
+button { cursor: pointer; background-color: #1a1a1a; border: 1px solid #660000; color: #cc0000; border-radius: 5px; padding: 10px 15px; font-weight: bold; transition: all 0.2s ease-in-out; }
+button:hover { background-color: #2a2a2a; color: #ff3333; border-color: #8b0000; box-shadow: 0 0 10px rgba(255, 50, 50, 0.6); }
+
+/* --- Centered Login/Auth Form --- */
+.auth-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 20px; flex-direction: column; }
+.auth-form { width: 100%; max-width: 350px; text-align: center; padding: 30px; 
+    /* Increased transparency and added backdrop filter */
+    background-color: rgba(0,0,0,0.6); 
+    backdrop-filter: blur(5px);
+    border: 1px solid #550000; border-radius: 5px; box-shadow: 0 0 15px rgba(204, 0, 0, 0.5); }
+.auth-form h2 { color: #e0e0e0; margin-top: 0; margin-bottom: 20px; }
+.auth-form input[type="text"], .auth-form input[type="password"] { width: 100%; box-sizing: border-box; margin-bottom: 15px; text-align: center; padding: 12px; }
+.auth-form button { width: 100%; padding: 12px; }
+.auth-form a { color: #ff5555; text-decoration: none; }
+.error-message { background-color: #4d0000; color: #ffc2c2; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #990000; }
+.success-message { background-color: #004d00; color: #c2ffc2; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #009900; }
+
+/* --- Rules Button & Modal --- */
+/* The rules-button is now part of the .header-buttons-left flex container */
+.rules-button { /* Keep this block for its specific visual styles */
+    background: #333;
+    color: #ffaa55;
+    border: 1px solid #555;
+    width: 35px;
+    height: 35px;
+    font-size: 1.5em; /* Larger font size for '!' */
+    font-weight: bold;
+    padding: 0;
+    line-height: 35px; /* Center text vertically */
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: center;
+    font-family: 'Times New Roman', serif;
+}
+.rules-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+.rules-modal-content { background: #1a1a1a; color: #e0e0e0; padding: 25px 35px; border-radius: 8px; border: 1px solid #cc0000; box-shadow: 0 0 25px rgba(204, 0, 0, 0.6); max-width: 600px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; }
+.rules-modal-content h2 { margin-top: 0; color: #ff3333; font-family: 'Courier Prime', monospace; border-bottom: 1px solid #444; padding-bottom: 10px; }
+.rules-modal-content ul { list-style: disc; padding-left: 25px; }
+.rules-modal-content li { margin-bottom: 8px; line-height: 1.5; }
+.close-rules-button { position: absolute; top: 10px; right: 15px; font-size: 2em; font-weight: bold; color: #aaa; cursor: pointer; line-height: 1; }
+#toggle-rules-checkbox:checked ~ .rules-modal-overlay { display: flex; }
+
+/* --- Notes Modal --- */
+.notes-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 1001; display: none; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+.notes-modal-content { background: #1a1a1a; color: #e0e0e0; padding: 25px 35px; border-radius: 8px; border: 1px solid #cc0000; box-shadow: 0 0 25px rgba(204, 0, 0, 0.6); max-width: 600px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; }
+.notes-modal-content h2 { margin-top: 0; color: #ff3333; font-family: 'Courier Prime', monospace; border-bottom: 1px solid #444; padding-bottom: 10px; }
+.close-notes-button { position: absolute; top: 10px; right: 15px; font-size: 2em; font-weight: bold; color: #aaa; cursor: pointer; line-height: 1; }
+#toggle-notes-checkbox:checked ~ .notes-modal-overlay { display: flex; }
+.notes-section { margin-bottom: 20px; border: 1px solid #333; padding: 15px; border-radius: 5px; background-color: rgba(0,0,0,0.3); }
+.notes-section h4 { color: #ff5555; margin-top: 0; margin-bottom: 10px; border-bottom: 1px dashed #555; padding-bottom: 5px; }
+.notes-section li, .notes-section p { margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; }
+.notes-edit-form textarea { width: 100%; min-height: 120px; box-sizing: border-box; padding: 10px; border: 1px solid #660000; border-radius: 5px; background-color: #222; color: #e0e0e0; font-size: 1em; resize: vertical; margin-bottom: 10px; }
+.notes-edit-form button { width: 100%; padding: 10px; }
+.notes-feedback { padding: 10px; margin-top: 15px; border-radius: 4px; text-align: center; font-weight: bold; }
+.notes-feedback.success { background-color: #004d00; color: #c2ffc2; border: 1px solid #009900; }
+.notes-feedback.error { background-color: #4d0000; color: #ffc2c2; border: 1px solid #990000; }
+
+/* --- Admin/Mod Moderation Features --- */
+a.username-clickable { text-decoration: none; display: inline-block; }
+a.username-clickable:hover strong { background-color: rgba(204, 0, 0, 0.3); border-radius: 3px; }
+.delete-msg-form { position: absolute; right: 5px; top: 8px; margin: 0; padding: 0; }
+.delete-msg-form button { background: transparent; border: none; color: #ff3333; opacity: 0.3; cursor: pointer; font-size: 1.1em; padding: 2px 5px; border-radius: 3px; line-height: 1; }
+.delete-msg-form button:hover { opacity: 1; background: #444; box-shadow: none; }
+.danger-btn { background-color: #610000; color: #ffc2c2; border-color: #990000; }
+.danger-btn:hover { background-color: #8b0000; }
+
+/* --- Moderation Panel Styles (within Profile Frame) --- */
+.moderate-target { padding: 0; word-wrap:break-word; margin-bottom: 10px; font-size: 0.9em; }
+.moderate-actions { padding: 0 10px; }
+.moderate-actions hr { border: 0; border-top: 1px solid #444; margin: 15px 0; }
+.moderate-actions form { display: flex; flex-direction: column; gap: 15px; }
+.permission-denied { padding: 0 10px; color: #ff9999; }
+.close-link { display:block; text-align:center; color: #999; text-decoration: none; padding: 8px; background: #333; border-radius: 4px; margin-top: 15px; }
+.close-link:hover { background: #444; color: #fff; }
+.kick-form { display: flex; gap: 10px; flex-wrap: wrap; }
+.kick-form input[type="text"] { flex-grow: 1; padding: 8px; height: auto; background: #111; color: #e0e0e0; border: 1px solid #555; }
+.kick-form button { padding: 8px 12px; font-size: 0.9em; }
+.token-grant-form { display: flex; flex-direction: column; gap: 10px; align-items: center;}
+.token-grant-form .token-input { width: 100%; box-sizing: border-box; padding: 8px; height: auto; background: #111; color: #e0e0e0; border: 1px solid #555; -moz-appearance: textfield; text-align: center; }
+.token-grant-form .token-input::-webkit-outer-spin-button, .token-grant-form .token-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.token-grant-form button { padding: 8px 12px; font-size: 0.9em; width: 100%; }
+.form-hint { font-size: 0.8em; color: #888; text-align: center; margin-top: -5px; }
+button.full-width { width: 100%; font-size: 0.9em; }
+
+/* --- Profile/Settings Panel --- */
+.profile-settings { padding: 0 10px; }
+.profile-settings form { display: flex; flex-direction: column; gap: 12px; }
+.profile-settings label { display: block; margin-bottom: 5px; font-size: 0.9em; }
+.profile-settings input[type="color"] { width: 100%; height: 35px; border: 1px solid #555; padding: 2px; cursor: pointer; box-sizing: border-box; }
+.profile-settings .checkbox-label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.9em;}
+.profile-settings button { margin-top: 10px; width: 100%; padding: 8px; }
+
+/* --- Advanced "Molten Rot" Title Animation --- */
+.chat-header h1 {
+    background: linear-gradient(180deg, #ff4d4d, #ff0000, #8b0000, #4a1d05, #8b0000, #ff0000, #ff4d4d);
+    background-size: 100% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: none;
+    animation: molten-flow 15s ease-in-out infinite;
+}
+@keyframes molten-flow {
+  0% { background-position: 50% 0%; filter: drop-shadow(0 0 10px #ff5e5e); }
+  50% { background-position: 50% 100%; filter: drop-shadow(0 0 15px #4a1d05); }
+  100% { background-position: 50% 0%; filter: drop-shadow(0 0 10px #ff5e5e); }
+}
+
+/* =================================================================== */
+/* --- FINAL STYLES for Channels, Notifications, and Input Bar Fix --- */
+/* =================================================================== */
+
+/* --- Notification Bar Styles (top-level) --- */
+.inline-notification-form {
+    display: inline; /* Keep the form itself inline */
+    margin: 0;
+    padding: 0;
+}
+.notification-link {
+    background: none;
+    border: none;
+    color: #c2ffc2; /* Light green text */
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0 5px;
+    font-weight: bold;
+    animation: pulse-green 2s infinite ease-in-out;
+    white-space: nowrap; /* Prevent channel names from wrapping if too long */
+}
+.notification-link:hover {
+    color: #fff;
+    text-shadow: 0 0 8px #0f0;
+}
+@keyframes pulse-green {
+  0% { color: #c2ffc2; text-shadow: none; }
+  50% { color: #fff; text-shadow: 0 0 10px #7f7; }
+  100% { color: #c2ffc2; text-shadow: none; }
+}
+
+/* --- Message Pulse Animation --- */
+.message-pulse {
+    animation: pulse-red 1.5s ease-out;
+}
+@keyframes pulse-red {
+  0% { box-shadow: none; }
+  50% { box-shadow: inset 0 0 15px rgba(204, 0, 0, 0.7); }
+  100% { box-shadow: none; }
+}
+
+/* --- Input Bar Layout (Original State) --- */
+.input-bar-container {
+    padding: 15px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.channel-form {
+    flex-shrink: 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.message-form {
+    flex-grow: 1;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.channel-selector {
+    padding: 10px;
+    border: 1px solid #660000;
+    border-radius: 5px;
+    background-color: #222;
+    color: #e0e0e0;
+    font-size: 1em;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cc0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1em;
+    padding-right: 2rem;
+}
+.message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #660000;
+    border-radius: 5px;
+    background-color: #222;
+    color: #e0e0e0;
+    font-size: 1em;
+    font-family: 'Roboto', sans-serif;
+    resize: none; /* Disables user resizing */
+    overflow-y: auto; /* Adds a scrollbar if content is too tall */
+    line-height: 1.4; /* Improves text alignment */
+    height: 18px; /* Sets a base height that matches the old input */
+}
+
+.switch-channel-btn, .send-btn {
+    flex-shrink: 0;
+}
+.switch-channel-btn, .send-btn {
+    flex-shrink: 0;
+}
+
+/* --- AFK Feature Styles --- */
+.chatters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #444;
+}
+.chatters-header h3 {
+    margin: 0;
+    color: #ff5555;
+    font-size: 1em;
+}
+.afk-form { margin: 0; }
+.afk-button {
+    padding: 3px 8px;
+    font-size: 0.8em;
+    background-color: #333;
+    border: 1px solid #555;
+    color: #ccc;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+.afk-button:hover {
+    background-color: #444;
+    color: #fff;
+    border-color: #777;
+}
+.afk-status {
+    font-style: italic;
+    color: #888;
+    font-size: 0.9em;
+}
+
+/* --- Live Visual Effects --- */
+
+/* 1. Fade to Black Effect */
+@keyframes fade-to-black {
+  0%, 100% { opacity: 0; pointer-events: none; }
+  10%, 80% { opacity: 1; pointer-events: all; }
+}
+.effect-fade-to-black::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: #000;
+  z-index: 9999;
+  animation: fade-to-black 2.5s ease-in-out forwards;
+}
+
+/* 2. Classic Glitch Effect */
+@keyframes classic-glitch {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-3px, -3px); }
+  20% { transform: translate(3px, 3px); }
+  30% { transform: translate(-3px, 3px); }
+  40% { transform: translate(3px, -3px); }
+  50% { transform: translate(-3px, -3px); }
+  60% { transform: translate(3px, 3px); }
+  70% { transform: translate(0, 0); }
+}
+.effect-glitch-classic {
+  animation: classic-glitch 0.4s linear forwards;
+}
+
+/* 3. Color Burn Glitch Effect */
+@keyframes color-burn-glitch {
+  0%, 100% { opacity: 0; }
+  25%, 75% { opacity: 0.6; transform: translate(5px, 5px); }
+  50% { transform: translate(-5px, -5px); }
+}
+.effect-glitch-burn::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: #ff0000; /* Red channel */
+  z-index: 9998;
+  pointer-events: none;
+  mix-blend-mode: color-burn; /* This creates the cool effect */
+  animation: color-burn-glitch 0.5s linear forwards;
+}
+
+body.effect-fade-from-black::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  z-index: 9999;
+  pointer-events: all;
+  animation: fade-in-from-black 1.5s ease-out forwards;
+}
+/* --- Reply Feature Styles --- */
+.reply-link {
+    position: absolute;
+    right: 35px; /* Position next to the delete button */
+    top: 10px; /* Anchors the button 10px from the top */
+    text-decoration: none;
+    color: #999;
+    font-size: 1.1em;
+    font-weight: normal;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s ease;
+    line-height: 1;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+.msg-line:hover .reply-link {
+    opacity: 0.6; /* Becomes visible on message hover */
+}
+.reply-link:hover {
+    opacity: 1;
+    background: #444;
+    color: #fff;
+}
+.reply-quote-box {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid #555;
+    padding: 5px 8px;
+    margin: 8px 0 0 15px;
+    font-size: 0.9em;
+    color: #bbb;
+    opacity: 0.8;
+    white-space: normal; /* Allows text to wrap to new lines */
+    word-wrap: break-word; /* Ensures long words without spaces will also wrap */
+}
+.reply-quote-box strong {
+    color: #ddd;
+}
+/* --- PM Feature Styles --- */
+.pm-link {
+    text-decoration: none;
+    font-size: 1.1em;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+    padding: 2px 4px;
+    border-radius: 3px;
+    margin-left: 5px; /* A smaller, consistent margin for all icons */
+}
+.pgp-link {
+    margin-left: 10px; /* The first icon gets a slightly larger margin */
+}
+
+/* This ensures the mail icon has a smaller space when it follows the PGP link */
+.pgp-link + .pm-link {
+    margin-left: 5px;
+}
+.pm-link:hover {
+    opacity: 1;
+    background: #444;
+}
+/* --- PM Interface Styles --- */
+.pm-container {
+    height: 95vh; /* Make it fill the viewport like the main chat */
+}
+.pm-back-button {
+    color: #ff8888;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+.pm-back-button:hover {
+    background-color: #555;
+    border-color: #ff5555;
+    color: #fff;
+}
+.pm-messages-frame {
+    flex-grow: 1;
+    border: none;
+    background-color: #1a1a1a;
+}
+.pm-input-frame {
+    flex-shrink: 0;
+    border: none;
+    height: 70px; /* Set a fixed height for the input area */
+    border-top: 1px solid #444;
+}
+.pm-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.pm-message-wrapper {
+    display: flex;
+    margin-bottom: 10px;
+    max-width: 70%;
+}
+.pm-message-wrapper.sent {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+.pm-message-wrapper.received {
+    align-self: flex-start;
+}
+.pm-message-bubble {
+    padding: 10px 15px;
+    border-radius: 18px;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+.pm-message-wrapper.sent .pm-message-bubble {
+background-color: #610000; /* Rottier Red for sent messages (similar to danger-btn bg) */
+    color: #ffc2c2; /* Lighter red text */
+}
+.pm-message-wrapper.received .pm-message-bubble {
+    background-color: #004d00; /* Darker Green for received messages (similar to success background) */
+    color: #c2ffc2; /* Lighter green text */
+}
+.pm-timestamp {
+    font-size: 0.75em;
+    color: #999;
+    margin-top: 5px;
+    text-align: right;
+}
+.pm-input-area {
+    padding: 10px;
+    border-top: 1px solid #444;
+}
+.pm-form {
+    display: flex;
+    gap: 10px;
+}
+.pm-form .pm-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #660000;
+    border-radius: 5px;
+    background-color: #222;
+    color: #e0e0e0;
+    font-size: 1em;
+}
+.pm-form button {
+    /* The height is now determined by padding to match the input field */
+    padding: 10px 15px;
+}
+.pm-notification-icon {
+    margin-left: 5px;
+    animation: pulse-pm-icon 2s infinite ease-in-out;
+}
+
+@keyframes pulse-pm-icon {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.5; }
+}
+
+/* --- Command Features --- */
+/* Spoiler text styling */
+/* Spoiler text styling */
+.spoiler-text {
+    background-color: #333; /* Dark background to hide text */
+    color: #333;            /* Initially hidden color, same as background */
+    padding: 2px 5px;
+    border-radius: 3px;
+    cursor: pointer;        /* Indicates it's clickable (via hover/selection without JS) */
+    user-select: none;      /* Prevent text selection from revealing it easily */
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.6);
+
+    /* Initial state: No transition */
+    transition: none; 
+}
+
+/* Re-enable transition ONLY when the hidden checkbox is NOT checked */
+/* This makes the transition work on hover, but not on initial load/refresh */
+#disable-spoiler-transition:not(:checked) ~ .chat-messages .spoiler-text {
+    transition: background-color 0.8s ease, color 0.8s ease; /* Slower fade-in transition */
+}
+
+
+.spoiler-text:hover,
+.spoiler-text.revealed { /* '.revealed' class is if you add JS later */
+    background-color: #4a0000; /* Darker blood red background on hover/reveal */
+    color: #ff8888;            /* Light blood red text color on hover/reveal */
+    text-shadow:
+        1px 1px 0px rgba(0, 0, 0, 0.5),
+        -1px -1px 0px rgba(255, 255, 255, 0.05),
+        inset 0 0 5px rgba(50, 20, 10, 0.3),
+        0 0 2px rgba(100, 50, 20, 0.4);
+}
+
+/* Add a general hidden-checkbox style if not already present in your CSS */
+.hidden-checkbox {
+    display: none;
+}
+/* Style for /me command actions */
+.me-action {
+    color: #aaddff; /* A light blue/cyan color for /me actions */
+    font-style: italic;
+    font-weight: bold;
+}
+
+/* Basic text formatting */
+.chat-messages strong {
+    font-weight: bold;
+    /* color: inherit; or specific color if desired */
+}
+
+.chat-messages em {
+    font-style: italic;
+    /* color: inherit; or specific color if desired */
+}
+
+.chat-messages u {
+    text-decoration: underline;
+}
+
+/* Style for mentions */
+.mention {
+    /* Styles are mostly inline, but can add general effects */
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3); /* Subtle glow for mentions */
+}
+/* style.css (add these new styles if not already present) */
+
+.pm-destroy-button {
+    background-color: #8b0000; /* Dark red, similar to danger-btn */
+    color: #ffc2c2;
+    border-color: #990000;
+    padding: 5px 10px; /* Smaller button for header */
+    font-size: 0.9em;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+}
+.pm-destroy-button:hover {
+    background-color: #b00000;
+    box-shadow: 0 0 8px rgba(153, 0, 0, 0.7);
+}
+
+/* Style for system messages within PM. The destroy confirmation message is one of these. */
+.pm-message-wrapper.system .pm-message-bubble {
+    background-color: #333300; /* Dark yellow/brown for system PMs */
+    color: #ffcc00;
+    border: 1px solid #666600;
+    text-align: center;
+    /* Optional: Make system messages wider if they contain buttons */
+    max-width: 90%;
+    display: flex; /* Use flex to center content within bubble if needed */
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* Allow content to wrap */
+}
+/* Ensure system messages sent from yourself are also styled */
+.pm-message-wrapper.sent.system .pm-message-bubble {
+    background-color: #333300;
+    color: #ffcc00;
+    border: 1px solid #666600;
+}
+
+
+.pm-message-wrapper .confirm-destroy-btn {
+    background-color: #004d00; /* Green button for confirmation */
+    color: #c2ffc2;
+    border: 1px solid #009900;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    font-size: 0.85em; /* Slightly smaller text for inline button */
+    display: inline-block;
+    margin-left: 10px; /* Space from message text */
+    white-space: normal; /* Allow text to wrap within button */
+    word-break: break-word; /* Ensure long text breaks */
+}
+.pm-message-wrapper .confirm-destroy-btn:hover {
+    background-color: #006900;
+    box-shadow: 0 0 10px rgba(0, 153, 0, 0.5);
+}
+
+/* Ensure inline form doesn't break button layout */
+.pm-message-wrapper .inline-form {
+    display: inline; /* Keep the form itself inline */
+    margin: 0;
+    padding: 0;
+}
+.toggle-checkbox {
+    display: none; /* This must be present and active in your style.css */
+}
+
+/* --- Moderation Feedback Bar --- */
+.moderation-feedback-bar {
+    padding: 10px 15px;
+    background-color: #004d00; /* Dark green for success */
+    color: #c2ffc2;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 1px solid #009900;
+    font-size: 0.95em;
+}
+
+
+
+/* --- Kick Log Viewer Styles --- */
+.kick-log-entry {
+    border: 1px solid #444;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    background-color: rgba(0,0,0,0.2);
+}
+.kick-log-summary {
+    cursor: pointer;
+    padding: 15px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.kick-log-summary:hover {
+    background-color: rgba(255,255,255,0.05);
+}
+.kick-log-details {
+    padding: 15px;
+    border-top: 1px solid #444;
+    background-color: rgba(0,0,0,0.3);
+}
+.kick-log-details h4 {
+    margin-top: 0;
+    color: #ff5555;
+    border-bottom: 1px dashed #555;
+    padding-bottom: 5px;
+}
+.chat-history-box {
+    background: #111;
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-size: 0.9em;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* --- Custom Username Animations --- */
+
+/* Keyframes for the Noisy Glitch effect */
+@keyframes noisy-glitch {
+  0% { transform: translate(0, 0) skew(0deg); }
+  10% { transform: translate(-1px, -1px) skew(-1deg); }
+  20% { transform: translate(1px, 1px) skew(1deg); }
+  30% { transform: translate(-2px, 1px) skew(0deg); }
+  40% { transform: translate(1px, -1px) skew(2deg); }
+  50% { transform: translate(0, 0) skew(0deg); }
+  60% { transform: translate(2px, 2px) skew(0deg); }
+  70% { transform: translate(-1px, 1px) skew(-3deg); }
+  80% { transform: translate(1px, -2px) skew(1deg); }
+  90% { transform: translate(0, 0) skew(0deg); }
+  100% { transform: translate(0, 0) skew(0deg); }
+}
+
+/* Keyframes for the Color Flicker effect */
+@keyframes color-flicker {
+  0% { text-shadow: 2px 0 #00aaff, -2px 0 #ff1111; }
+  25% { text-shadow: 2px 0 #00aaff, -2px 0 #ff1111; }
+  26% { text-shadow: -2px 0 #00aaff, 2px 0 #ff1111; }
+  50% { text-shadow: -2px 0 #00aaff, 2px 0 #ff1111; }
+  51% { text-shadow: 2px 0 #00aaff, -2px 0 #ff1111; }
+  75% { text-shadow: 2px 0 #00aaff, -2px 0 #ff1111; }
+  76% { text-shadow: -2px 0 #00aaff, 2px 0 #ff1111; }
+  100% { text-shadow: -2px 0 #00aaff, 2px 0 #ff1111; }
+}
+
+/* --- Flame Glow Username Animation --- */
+@keyframes flame-flicker {
+  0%   { text-shadow: 0 0 5px #fff, 0 0 10px #ff0, 0 0 15px #f90, 0 0 20px #f60, 0 0 25px #c00, 0 0 30px #900; }
+  25%  { text-shadow: 0 0 6px #fff, 0 0 12px #ff0, 0 0 18px #f90, 0 0 22px #f80, 0 0 28px #d00, 0 0 35px #a00; }
+  50%  { text-shadow: 0 0 4px #fff, 0 0 8px #ff0, 0 0 16px #fa0, 0 0 24px #f50, 0 0 30px #c00, 0 0 40px #800; }
+  75%  { text-shadow: 0 0 7px #fff, 0 0 14px #ff0, 0 0 20px #f90, 0 0 25px #f70, 0 0 32px #e00, 0 0 40px #b00; }
+  100% { text-shadow: 0 0 5px #fff, 0 0 10px #ff0, 0 0 15px #f90, 0 0 20px #f60, 0 0 25px #c00, 0 0 30px #900; }
+}
+
+
+/* --- Re-usable Glitch Animation Definitions --- */
+
+/* Animation 1: A rapid, jerky jitter effect */
+@keyframes rapid-jitter {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-2px, 2px); }
+  50%  { transform: translate(2px, -1px); }
+  75%  { transform: translate(-1px, 0); }
+  100% { transform: translate(0, 2px); }
+}
+
+/* Animation 2: A color-channel separation (Chromatic Aberration) glitch */
+@keyframes color-fringe-glitch {
+  0%   { text-shadow: 2px 0 #ff3333, -2px 0 #00ffff; }
+  25%  { text-shadow: -2px 0 #ff3333, 2px 0 #00ffff; }
+  50%  { text-shadow: 2px 2px #ff3333, -2px -2px #00ffff; }
+  75%  { text-shadow: 0 -2px #ff3333, 0 2px #00ffff; }
+  100% { text-shadow: 2px 0 #ff3333, -2px 0 #00ffff; }
+}
+
+/* --- NEW BATCH OF CUSTOM USERNAME EFFECTS --- */
+
+
+/* --- Re-usable Pulsing Glow Animation Definition --- */
+@keyframes pulse-glow-red {
+  0% {
+    text-shadow: 0 0 5px #f00, 0 0 10px #c00, 0 0 15px #a00;
+  }
+  50% {
+    text-shadow: 0 0 10px #ff3333, 0 0 20px #f00, 0 0 30px #c00;
+  }
+  100% {
+    text-shadow: 0 0 5px #f00, 0 0 10px #c00, 0 0 15px #a00;
+  }
+}
+
+
+/* --- NEW BATCH of Re-usable Animation Definitions --- */
+
+/* Animation for a high-energy, crackling electric effect */
+@keyframes electric-spark {
+  0%   { text-shadow: 0 0 4px #fff, 0 0 8px #0ff, 0 0 12px #0ff; transform: translate(0, 0); }
+  25%  { text-shadow: 0 0 6px #fff, 0 0 10px #0ff, 0 0 16px #0ff; transform: translate(1px, -1px); }
+  50%  { text-shadow: 0 0 4px #fff, 0 0 8px #0ff, 0 0 12px #0ff; transform: translate(-1px, 1px); }
+  100% { text-shadow: 0 0 5px #fff, 0 0 10px #0ff, 0 0 15px #0ff; transform: translate(0, 0); }
+}
+
+/* Animation for a blurry, unstable, "digital focus" effect */
+@keyframes unstable-focus {
+  0%, 90% {
+    filter: blur(1.5px);
+    opacity: 0.7;
+  }
+  95% {
+    filter: blur(0);
+    opacity: 1;
+  }
+  100% {
+    filter: blur(1.5px);
+    opacity: 0.7;
+  }
+}
+
+/* Animation for a slow, drifting RGB ghosting effect */
+@keyframes rgb-ghosting {
+  from {
+    text-shadow: -2px -1px 2px #ff3333, 2px 1px 2px #00ffff;
+  }
+  to {
+    text-shadow: 2px 1px 2px #ff3333, -2px -1px 2px #00ffff;
+  }
+}
+
+/* 1. Flame Glow (Readability Mix) */
+.username-flame-read-mix {
+  color: #a00; /* Dark red text for high contrast */
+  font-weight: bold;
+  animation: flame-flicker 1.5s infinite linear; /* Uses the same flicker animation */
+}
+/* Note: This re-uses the @keyframes flame-flicker from the previous effect. No new keyframes needed. */
+
+
+/* 2. Glitch Text (Scanner Line) */
+@keyframes scan-effect {
+  0%   { top: -10%; opacity: 0.2; }
+  50%  { opacity: 0.8; }
+  100% { top: 110%; opacity: 0.2; }
+}
+.username-glitch-scanner {
+  position: relative; /* Required for the pseudo-element positioning */
+  overflow: hidden; /* Keeps the glow contained */
+}
+.username-glitch-scanner::before {
+  content: '';
+  position: absolute;
+  left: -10%;
+  top: -10%;
+  width: 120%;
+  height: 3px;
+  background-color: #0ff;
+  box-shadow: 0 0 10px #0ff;
+  animation: scan-effect 2s infinite ease-in-out;
+}
+
+
+/* 3. Animated Jitter */
+@keyframes jitter-effect {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-1px, 1px); }
+  50%  { transform: translate(1px, -1px); }
+  75%  { transform: translate(-1px, 0); }
+  100% { transform: translate(0, 1px); }
+}
+.username-animated-jitter {
+  animation: jitter-effect 0.15s infinite steps(1, end);
+}
+
+
+/* 4. Digital Matrix Flow */
+@keyframes matrix-rain-flow {
+  0%   { background-position: 50% 0%; }
+  100% { background-position: 50% 100%; }
+}
+.username-matrix-flow {
+  background: linear-gradient(to bottom, #7FFF00, #3a3, #008000, #3a3, #7FFF00);
+  background-size: 100% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: bold;
+  animation: matrix-rain-flow 3s infinite linear;
+}
+
+
+/* 5. Ghostly Echo */
+@keyframes ghost-pulse {
+  0%   { opacity: 0.7; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+.username-ghostly-echo {
+  color: #cde; /* Pale blue/cyan text color */
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.4),
+               0 0 10px rgba(0, 255, 255, 0.3),
+               0 0 20px rgba(0, 255, 255, 0.2),
+               0 0 35px rgba(0, 255, 255, 0.1);
+  animation: ghost-pulse 4s infinite ease-in-out;
+}
+
+
+.username-flame-glow {
+  color: #fff; /* Base text color */
+  animation: flame-flicker 1.5s infinite linear;
+}
+
+
+
+/* Classes to apply the animations */
+.username-glitch-noisy {
+  animation: noisy-glitch 0.8s steps(2, end) infinite;
+}
+
+.username-glitch-flicker {
+  animation: color-flicker 0.1s linear infinite;
+}
+
+.username-gradient-matrix {
+  background-image: linear-gradient(to bottom, #7FFF00, #008000); 
+  background-clip: text; 
+  -webkit-background-clip: text; 
+  color: transparent; 
+  font-weight: bold;
+}
+/* Keyframes for the scrolling gradient effect */
+@keyframes gradient-glitch-scroll {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Class to apply the new effect */
+.username-gradient-scroll {
+  background-image: linear-gradient(90deg, #7FFF00, #008000, #3a3, #008000, #7FFF00);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: bold;
+  animation: gradient-glitch-scroll 2s linear infinite;
+}
+
+/* --- Moderation Feedback Fade Animation --- */
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    max-height: 100px; /* Start at full height */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-width: 1px;
+  }
+  80% {
+    opacity: 1;
+    max-height: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-width: 1px;
+  }
+  100% {
+    opacity: 0;
+    max-height: 0; /* Animate height to 0 */
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    overflow: hidden;
+  }
+}
+
+.moderation-feedback-bar {
+    animation: fadeOut 5s ease-in-out forwards;
+    transform-origin: top;
+}
+/* --- Collapsible Offline List --- */
+.toggle-checkbox-offline {
+    display: none; /* Hide the actual checkbox */
+}
+.offline-header-toggle {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    text-decoration: none; /* Remove underline from the link */
+}
+.offline-header-toggle h3 {
+    color: #ff5555; /* Ensure the h3 stays the right color */
+    margin-bottom: 0;
+}
+.offline-header-toggle::after {
+    content: '▲';
+    font-size: 0.8em;
+    color: #888;
+    transition: transform 0.3s ease-in-out;
+    padding-right: 5px;
+}
+.toggle-checkbox-offline:not(:checked) + .chatters-header .offline-header-toggle::after {
+    transform: rotate(180deg);
+}
+
+.toggle-checkbox-offline:not(:checked) ~ .offline-users-list {
+    max-height: 0;
+    opacity: 0;
+}
+
+/* --- CORRECTED CHATTERS LIST & OFFLINE LIST SCROLLING --- */
+.chatters-list {
+    padding: 10px;
+    box-sizing: border-box; /* Include padding in height calculation */
+    display: flex;
+    flex-direction: column; /* Stack sections vertically */
+    height: 100%; /* Make the container fill the entire frame height */
+}
+
+.offline-users-list {
+    flex-grow: 1; /* This makes the offline list take all available remaining space */
+    overflow-y: auto; /* This enables a vertical scrollbar ONLY when needed */
+    min-height: 0; /* A critical property for flexbox scrolling */
+    transition: all 0.3s ease;
+    opacity: 1;
+}
+
+/* Update the collapse rule to work with flexbox */
+.toggle-checkbox-offline:not(:checked) ~ .offline-users-list {
+    flex-grow: 0;
+    min-height: 0;
+    max-height: 0;
+    opacity: 0;
+    border: none;
+    margin-top: 0;
+    padding: 0;
+}
+
+/* --- DEFINITIVE GAME FRAME SWAPPING LOGIC --- */
+
+/* 1. Define the game frame's default state: completely hidden and shrunken. */
+.game-frame {
+    flex-grow: 0;
+    width: 0;
+    opacity: 0;
+    border: none;
+    background-color: #111;
+    transition: width 0.3s ease, opacity 0.2s ease, flex-grow 0.3s ease;
+    overflow: hidden;
+}
+
+/* 2. Define what happens when the game toggle is checked. */
+#toggle-game-checkbox:checked ~ .main-content .messages-frame {
+    /* Shrink the message frame to nothing */
+    flex-grow: 0;
+    width: 0;
+    opacity: 0;
+}
+
+#toggle-game-checkbox:checked ~ .main-content .game-frame {
+    /* Expand the game frame to fill the space */
+    flex-grow: 1;
+    width: 100%;
+    opacity: 1;
+}
+
+
+/* --- PGP Block Formatting --- */
+/* --- Definitive PGP Block Wrapping Fix --- */
+.pgp-block {
+    background-color: rgba(0,0,0,0.5);
+    border: 1px solid #444;
+    border-left: 3px solid #cc0000;
+    padding: 15px;
+    margin-top: 5px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.9em;
+    color: #ffaaaa;
+    /* --- CORRECTED PGP STYLES --- */
+    /* Preserves line breaks and spaces, but wraps text to the next line */
+    white-space: pre-wrap;
+    /* For long unbreakable strings, break the word to prevent overflow */
+    overflow-wrap: break-word;
+    /* The 'word-break' property is intentionally removed as it's too aggressive. */
+}
+/* --- System Feedback Bar --- */
+.system-feedback-bar {
+    padding: 10px 15px;
+    background-color: #002b4d; /* Dark blue for info */
+    color: #cce4ff;
+    text-align: center;
+    border-bottom: 1px solid #005599;
+    font-size: 0.95em;
+}
+/* --- Promotion Notification Bar --- */
+.promotion-notification-bar {
+    padding: 12px 20px;
+    background: linear-gradient(45deg, #004d26, #008040);
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 2px solid #33ff99;
+    box-shadow: 0 5px 15px rgba(0, 255, 128, 0.2);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2000; /* Ensure it's on top of everything */
+}
+.promotion-notification-bar strong {
+    color: #33ff99;
+    font-size: 1.2em;
+    letter-spacing: 1px;
+    background: #000;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.promotion-notification-bar a {
+    color: #fff;
+    font-weight: bold;
+    text-decoration: underline;
+}
+/* --- Offline User Search Form (Block Style) --- */
+.offline-search-form {
+    display: block; /* Change to block to take its own line */
+    margin: 10px 10px 15px 10px; /* Add more vertical margin */
+}
+.offline-search-wrapper {
+    position: relative;
+}
+.offline-search-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 12px 8px 35px; /* Adjust padding */
+    border: 1px solid #444;
+    background-color: #111;
+    color: #e0e0e0;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+.offline-search-btn {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 35px;
+    background: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 0;
+}
+.offline-search-btn:hover {
+    color: #ccc;
+    box-shadow: none;
+}
+/* Move the clear button to be part of the form flow */
+.offline-search-form .clear-search-btn {
+    display: inline-block; /* Allow it to sit next to other elements if needed */
+    margin-top: 8px; /* Add space above it if it wraps */
+    padding: 5px 10px;
+    font-size: 0.9em;
+    text-decoration: none;
+    background: #4d0000;
+    color: #ffc2c2;
+    border: 1px solid #800;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+.offline-search-form .clear-search-btn:hover {
+    background: #610000;
+    color: #fff;
+}
+/* --- Promotion Bar Logout Button Styling --- */
+.inline-logout-form {
+    display: inline; /* Allows the form to sit within the text */
+}
+.link-style-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: #fff; /* Match the link color in the bar */
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: inherit; /* Inherit font size from the container */
+    font-family: inherit; /* Inherit font family */
+}
+.link-style-button:hover {
+    box-shadow: none; /* Override default button hover */
+    color: #ccffdd; /* Slight color change on hover */
+}
+/* --- PGP Key Feature Styles --- */
+/* --- PGP Key Feature Styles (Rot-Chat Theme) --- */
+.pm-link.pgp-link {
+    margin-left: 10px; /* The first icon gets a slightly larger margin */
+}
+
+/* This ensures the mail icon has a smaller space when it follows the PGP link */
+.pgp-link + .pm-link {
+    margin-left: 5px;
+}
+
+.pgp-modal-overlay { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0, 0, 0, 0.85); 
+    z-index: 2000; 
+    display: flex; justify-content: center; align-items: center; 
+    padding: 20px; box-sizing: border-box; 
+    backdrop-filter: blur(5px);
+}
+.pgp-modal-content { 
+    background: #1a1a1a; color: #e0e0e0; 
+    padding: 25px 35px; border-radius: 8px; 
+    /* Changed to red theme */
+    border: 1px solid #cc0000; 
+    box-shadow: 0 0 25px rgba(204, 0, 0, 0.6); 
+    max-width: 700px; width: 100%; position: relative; 
+    max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column;
+}
+.pgp-modal-content h2 { 
+    margin-top: 0; 
+    /* Changed to red theme */
+    color: #ff5555; 
+    font-family: 'Courier Prime', monospace; 
+    border-bottom: 1px solid #444; padding-bottom: 10px; 
+}
+.close-pgp-button { 
+    position: absolute; top: 10px; right: 15px; 
+    font-size: 2em; font-weight: bold; color: #aaa; 
+    cursor: pointer; line-height: 1; text-decoration: none;
+}
+.pgp-key-display {
+    width: 100%;
+    flex-grow: 1;
+    min-height: 300px;
+    background-color: #111;
+    /* Changed to red theme */
+    color: #ffaaaa;
+    border: 1px solid #660000;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.9em;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: none;
+    white-space: pre;
+    border-radius: 4px;
+}
+.pgp-modal-close-link {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    /* Changed to red theme */
+    background: #610000;
+    border: 1px solid #990000;
+    color: #ffc2c2;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.pgp-modal-close-link:hover {
+    background-color: #8b0000;
+}
+/* --- PGP Key Input Box Styling --- */
+#pgp-key-input {
+    background-color: #111; /* Darker background */
+    border: 1px solid #660000;
+    color: #ffaaaa;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.9em;
+}
+
+#pgp-key-input:focus {
+    border-color: #ff3333;
+    box-shadow: 0 0 8px rgba(255, 51, 51, 0.4);
+}
+/* --- Embedded Image Styling --- */
+.embedded-image {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    margin-top: 5px;
+    display: block;
+}
+/* --- Upload Modal Styles --- */
+.upload-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 1002; /* Higher than other modals */
+    display: none; justify-content: center; align-items: center;
+    padding: 20px; box-sizing: border-box;
+}
+.upload-modal-content {
+    background: #1a1a1a; color: #e0e0e0; padding: 25px 35px;
+    border-radius: 8px; border: 1px solid #cc0000;
+    box-shadow: 0 0 25px rgba(204, 0, 0, 0.6);
+    max-width: 500px; width: 100%; position: relative;
+}
+.upload-modal-content h2 { margin-top: 0; color: #ff3333; }
+.upload-modal-content small { display: block; margin-top: -10px; margin-bottom: 15px; color: #888; font-size: 0.9em; }
+.close-upload-button {
+    position: absolute; top: 10px; right: 15px; font-size: 2em;
+    font-weight: bold; color: #aaa; cursor: pointer; line-height: 1;
+}
+#toggle-upload-checkbox:checked ~ .upload-modal-overlay {
+    display: flex;
+}
+.upload-file-input {
+    width: 100%; padding: 10px; background-color: #111;
+    border: 1px solid #444; border-radius: 4px; margin-bottom: 20px;
+}
+/* This new rule specifically targets number inputs within the upload form */
+.upload-modal-content input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #222;
+    border: 1px solid #660000;
+    color: #e0e0e0;
+    border-radius: 5px;
+}
+.upload-submit-btn { width: 100%; padding: 12px; }
+.upload-modal-content {
+    background: #1a1a1a; color: #e0e0e0; padding: 25px 35px;
+    border-radius: 8px; border: 1px solid #cc0000;
+    box-shadow: 0 0 25px rgba(204, 0, 0, 0.6);
+    max-width: 500px; width: 100%; position: relative;
+}
+.upload-modal-content h2 { margin-top: 0; color: #ff3333; }
+.close-upload-button {
+    position: absolute; top: 10px; right: 15px; font-size: 2em;
+    font-weight: bold; color: #aaa; cursor: pointer; line-height: 1;
+}
+#toggle-upload-checkbox:checked ~ .upload-modal-overlay {
+    display: flex;
+}
+.upload-file-input {
+    width: 100%; padding: 10px; background-color: #111;
+    border: 1px solid #444; border-radius: 4px; margin-bottom: 20px;
+}
+.upload-submit-btn { width: 100%; padding: 12px; }
+/* --- NEW: Pure CSS Image Modal --- */
+.image-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9998; /* High z-index to be on top */
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+/* This is the magic: When the overlay is the target of the URL's hash, display it */
+.image-modal-overlay:target {
+    display: flex;
+}
+
+.image-modal-content {
+    position: relative;
+    padding: 15px;
+    background: #111;
+    border: 1px solid var(--dynamic-border-color);
+    border-radius: 5px;
+    box-shadow: 0 0 30px var(--dynamic-glow-color);
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.image-modal-content img {
+    max-width: 100%;
+    max-height: calc(90vh - 80px); /* Adjust for padding and buttons */
+    object-fit: contain; /* Ensures image aspect ratio is maintained */
+}
+
+.image-modal-close-button {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: #fff;
+    color: #000;
+    border: 2px solid #000;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    line-height: 33px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 0 10px #000;
+}
+
+.image-modal-name {
+    text-align: center;
+    padding: 10px 0 0 0;
+    color: #ccc;
+    font-size: 0.9em;
+    word-break: break-all;
+}
+
+
+/* --- Visual Effects Toggle --- */
+body.disable-visual-effects .glow-wrapper::before {
+    display: none; /* Hide the outer glow */
+}
+
+body.disable-visual-effects .chat-header h1 {
+    animation: none !important; /* Disable molten animation */
+    background: #444 !important; /* Solid background for simplified logo */
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    color: #800000 !important; /* Dark blood red color for text */
+    text-shadow: none !important; /* Remove text shadow for a flatter look */
+}
+
+body.disable-visual-effects .effect-fade-to-black::before,
+body.disable-visual-effects .effect-glitch-classic,
+body.disable-visual-effects .effect-glitch-burn::after {
+    animation: none !important; /* Disable page load effects */
+    display: none !important; /* Hide overlay/effect elements */
+}
+
+/* --- NEW: Last Move Indicator --- */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 4px #fff, 0 0 6px #fff;
+  }
+  50% {
+    box-shadow: 0 0 10px #fff, 0 0 15px #fff;
+  }
+  100% {
+    box-shadow: 0 0 4px #fff, 0 0 6px #fff;
+  }
+}
+
+.line.last-move {
+  /* Make the line slightly thicker */
+  transform: scale(1.5); 
+  /* Add a white pulsing glow animation */
+  animation: pulse-glow 1.5s infinite ease-in-out;
+}
+/* --- BBCode: Red Notice Box --- */
+.notice-box {
+    background-color: #4d0000; /* Dark red background, matches error messages */
+    color: #ffc2c2;            /* Light red text */
+    border: 1px solid #990000;
+    border-left: 4px solid #cc0000; /* Thicker left border for emphasis */
+    padding: 15px;
+    padding-left: 50px; /* Extra padding on the left for the icon */
+    margin: 10px 0;
+    border-radius: 5px;
+    position: relative; /* Required for positioning the icon */
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Adds a warning icon to the notice box */
+.notice-box::before {
+    content: '⚠️ '; /* Warning emoji */
+    font-family: sans-serif; /* Ensures the emoji renders properly */
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.8em;
+    opacity: 0.8;
+}
+/* --- NEW BBCODE STYLES --- */
+
+/* 1. Quote Block */
+.quote-box {
+    display: block;
+    padding: 12px 15px;
+    margin: 8px 0 8px 20px;
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid #444;
+    border-left: 5px solid #888;
+    border-radius: 4px;
+    color: #ccc;
+}
+.quote-box-author {
+    display: block;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+/* 2. Code Block */
+.msg-line pre {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 15px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.9em;
+    color: #7f7; /* Green text for code */
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    overflow-x: auto; /* Add horizontal scroll for long lines */
+}
+.msg-line code {
+    font-family: inherit;
+    color: inherit;
+}
+
+/* 3. Highlighted Text */
+.highlight-text {
+    background-color: #665200; /* Dark yellow background */
+    color: #ffffa3; /* Light yellow text */
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+
+/* 4. Strikethrough text is handled by the <s> tag, no extra CSS needed */
+
+/* 5. Animated Text */
+.animate-pulse {
+    animation: pulse-glow-red 2s infinite ease-in-out;
+}
+.animate-shake {
+    display: inline-block; /* Required for transform to work */
+    animation: rapid-jitter 0.3s infinite steps(1, end);
+}
+.animate-ghost {
+    animation: rgb-ghosting 3s alternate infinite ease-in-out;
+}
+/* --- NEW BBCODE STYLES (Accordion & Progress Bar) --- */
+
+/* 1. Accordion / Collapsible Section */
+details.bb-accordion {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid #444;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+details.bb-accordion summary {
+    cursor: pointer;
+    padding: 12px 15px;
+    font-weight: bold;
+    color: #ff8888;
+    position: relative;
+    outline: none;
+    list-style: none; /* For Firefox */
+}
+
+details.bb-accordion summary::-webkit-details-marker {
+    display: none; /* For Chrome/Safari */
+}
+
+details.bb-accordion summary {
+    cursor: pointer;
+    padding: 12px 15px 12px 30px; /* Added left padding */
+    font-weight: bold;
+    color: #ff8888;
+    position: relative;
+    outline: none;
+    list-style: none; /* For Firefox */
+}
+
+details.bb-accordion summary::before {
+    content: '▶';
+    position: absolute;
+    left: 15px;
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%) rotate(0deg); /* Adjust vertical centering and rotation */
+    font-size: 0.8em;
+    color: #888;
+    transition: transform 0.2s ease-in-out;
+}
+
+details.bb-accordion[open] > summary::before {
+    transform: rotate(90deg);
+}
+
+.accordion-content {
+    padding: 15px;
+    border-top: 1px solid #444;
+}
+
+/* 2. Progress Bar */
+.progress-bar-container {
+    background-color: #111;
+    border: 1px solid #444;
+    border-radius: 20px;
+    padding: 3px;
+    margin: 10px 0;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+    position: relative;
+    height: 28px;
+    box-sizing: border-box;
+}
+
+.progress-bar-fill {
+    background: linear-gradient(to right, #610000, #cc0000);
+    height: 100%;
+    border-radius: 18px;
+    transition: width 0.5s ease-in-out;
+    box-shadow: 0 0 10px rgba(204,0,0,0.5);
+}
+
+.progress-bar-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 22px; /* Vertically center text */
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+}
+/* --- NEW: Countdown Bar Animation --- */
+@keyframes countdown-bar {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.countdown-bar-fill {
+  /* This class will apply the animation. The duration will be set inline by PHP. */
+  animation-name: countdown-bar;
+  animation-timing-function: linear; /* Ensures a smooth, steady depletion */
+  animation-fill-mode: forwards; /* Ensures the bar stays at 0% when finished */
+}
+
+/* --- FINAL CHATTERS LIST ALIGNMENT FIX --- */
+.chatters-list ul li {
+    display: flex;
+    justify-content: space-between;
+    /* This is the key change: it aligns items based on their text baseline */
+    align-items: baseline;
+    gap: 8px;
+    padding: 2px 0; /* Reduced vertical padding to tighten the list */
+    flex-wrap: nowrap;
+}
+
+.chatter-info {
+    flex-grow: 1;
+    min-width: 0;
+    display: flex;
+    /* Aligns the role icon with the username text */
+    align-items: baseline;
+    gap: 5px;
+}
+
+.chatter-info > a, .chatter-info > strong {
+    white-space: nowrap;      /* Prevent the text from wrapping to a new line */
+    overflow: hidden;         /* Hide any part of the text that overflows its container */
+    text-overflow: ellipsis;  /* Add '...' to the end of the truncated text */
+    display: inline-block;    /* Ensures the overflow properties work correctly */
+    max-width: 100%;          /* Prevents the element from exceeding its parent's width */
+}
+
+.chatter-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.pm-notification-icon {
+    flex-shrink: 0; /* Prevent the icon from shrinking */
+}
+
+/* --- DEFINITIVE Styling for Clickable #channel Links --- */
+
+
+.inline-channel-link {
+    color: #ff8888;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.inline-channel-link:hover {
+    color: #ff5555;
+    text-decoration: none;
+}
+
+
+/* --- NEW: Copyable Token Input Field --- */
+.copyable-token-input {
+    width: 100%;
+    padding: 10px;
+    background-color: #111;
+    border: 1px dashed #555;
+    color: #ffaaaa;
+    font-family: 'Courier Prime', monospace;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-align: center;
+    cursor: text;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.copyable-token-input:focus {
+    outline: none;
+    border-color: #ff5555;
+    box-shadow: 0 0 8px rgba(255, 85, 85, 0.5);
+}
+/* --- CORRECTED: Input Position Toggle --- */
+/* By default, the chat container lays out its children in column order */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* When the toggle checkbox is checked, reverse the column order */
+#toggle-input-position-checkbox:checked ~ .chat-container {
+    flex-direction: column-reverse;
+}
+
+/* Adjust borders based on position */
+#toggle-input-position-checkbox:checked ~ .chat-container .input-frame {
+    border-top: none;
+    border-bottom: 1px solid #444;
+}
+
+#toggle-input-position-checkbox:not(:checked) ~ .chat-container .input-frame {
+    border-top: 1px solid #444;
+    border-bottom: none;
+}
+/* --- NEW: Three-Stage Profile Panel Expansion --- */
+
+/* By default, the profile frame is hidden until its own toggle is checked */
+.profile-frame {
+    width: 0;
+    flex-shrink: 0;
+    border: none;
+    background-color: #111;
+    transition: width 0.3s ease, opacity 0.3s ease, border 0.3s ease;
+    opacity: 0;
+}
+
+/* State 1: Default View (Profile is open but not expanded) */
+#toggle-profile-checkbox:checked ~ .main-content .profile-frame {
+    width: 240px; /* Default width */
+    border-left: 1px solid #444;
+    opacity: 1;
+}
+
+/* State 2: Expanded View */
+/* When BOTH the main toggle AND the expand toggle are checked, make it bigger */
+#toggle-profile-checkbox:checked ~ #toggle-profile-expand-checkbox:checked ~ .main-content .profile-frame {
+    width: 75%; /* New, larger width for the expanded view */
+}
+
+/* Ensure the expand button has a visual cue when active */
+#toggle-profile-expand-checkbox:checked ~ .chat-container .header-buttons-right label[for="toggle-profile-expand-checkbox"] {
+    background-color: var(--accent-color);
+    color: #fff;
+    border-color: var(--accent-hover-color);
+}
+/* --- NEW: Streamlined Image Viewer Commenting System --- */
+.comment-container {
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid #282828;
+    border-left: 3px solid #444;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+}
+.comment-container.replying-to {
+    border-left-color: #ff5555;
+    box-shadow: 0 0 10px rgba(255, 85, 85, 0.15);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #333;
+}
+.comment-header strong { color: #ffaaaa; }
+.comment-header small { color: #888; font-size: 0.8em; }
+
+.comment-body {
+    line-height: 1.5;
+    color: #ddd;
+    word-wrap: break-word;
+    font-size: 0.95em;
+}
+
+.comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.reply-toggle {
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 0.85em;
+    color: #aaa;
+    font-weight: bold;
+    padding: 3px 8px;
+    background-color: #333;
+    border-radius: 3px;
+    margin-left: auto; /* Pushes the reply button to the far right */
+}
+.reply-toggle:hover { background-color: #444; color: #fff; }
+
+.reply-context {
+    background-color: rgba(255, 85, 85, 0.1);
+    border: 1px solid #550000;
+    padding: 10px;
+    margin: -15px -15px 15px -15px; /* Span full width of form */
+    border-radius: 4px 4px 0 0;
+}
+.reply-context p { margin: 0; font-size: 0.9em; }
+.reply-context strong { color: #ffc2c2; }
+.reply-context a { margin-left: 10px; color: #ffaaaa; font-size: 0.9em; font-weight: normal; }
+/* --- DEFINITIVE FIX for Scrolling on Standalone Pages --- */
+/*
+  This targets both the html and body tags when the body has the 'standalone-page' class.
+  This is necessary to override the global 'overflow: hidden' which was applied to both.
+*/
+.standalone-page, .standalone-page body {
+    height: auto;
+    overflow: visible; /* Use 'visible' to let the browser handle scrolling naturally */
+}
+/* --- Image Viewer Styles --- */
+.viewer-container {
+    width: 90%; /* Use width instead of max-width to be more direct */
+    max-width: 1400px; /* Set a reasonable max-width for very large screens */
+    margin: 20px auto;
+}
+.image-display-box {
+    text-align: center;
+    background-color: #000;
+    padding: 15px; /* Standardized padding */
+    border-radius: 5px;
+    border: 1px solid #333;
+    margin-bottom: 20px;
+}
+.image-display-box img {
+    max-width: 100%;
+    max-height: 50vh; /* Keep image height reasonable */
+    cursor: pointer;
+    transition: opacity .2s ease;
+}
+.image-display-box img:hover {
+    opacity: .85;
+}
+.image-info {
+    margin-bottom: 20px;
+}
+.image-info h1 {
+    margin-bottom: 5px;
+    color: #ff5555;
+    font-size: 1.5em; /* Make title slightly larger */
+    word-break: break-all; /* Ensure long titles don't overflow */
+}
+.image-info p {
+    color: #aaa;
+    font-size: .9em;
+    margin: 0;
+}
+.image-expiry-info {
+    font-size: 0.8em !important;
+    color: #888 !important;
+    margin-top: 5px;
+}
+.comments-section {
+    margin-top: 30px;
+}
+.image-vote-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+.vote-form {
+    display: inline-block;
+    margin: 0;
+}
+.vote-btn {
+    padding: 2px 10px;
+    font-size: 1em;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.vote-btn.up {
+    background-color: #004d00;
+    color: #c2ffc2;
+    border-color: #009900;
+}
+.vote-btn.down {
+    background-color: #610000;
+    color: #ffc2c2;
+    border-color: #990000;
+}
+.vote-count {
+    font-size: 1.2em;
+    font-weight: 700;
+    min-width: 30px;
+    text-align: center;
+}
+.vote-count.positive {
+    color: #7f7;
+}
+.vote-count.negative {
+    color: #f77;
+}
+.comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+.reply-context {
+    background-color: rgba(255,85,85,.1);
+    border: 1px solid #550000;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+.reply-context p {
+    margin: 0;
+    font-size: .9em;
+}
+.reply-context a {
+    margin-left: 10px;
+    color: #ffaaaa;
+    font-size: .9em;
+}
+.comment-container.replying-to {
+    border-left-color: #ff5555;
+    box-shadow: 0 0 10px rgba(255,85,85,.2);
+}
+
+/* Ensure body overflow fix is here for general use, if not already at the very top of your style.css */
+html, body {
+    overflow-y: auto !important;
+    height: auto !important;
+}
+
+/* --- Channel Topic Bar --- */
+.channel-topic-bar {
+    padding: 8px 15px;
+    background-color: #2a2a2a; /* Darker background */
+    color: #811511; /* Light green text */
+    border-bottom: 1px solid #444;
+    font-size: 0.95em;
+    text-align: left;
+    font-style: italic;
+    margin-bottom: 10px; /* Space below topic bar */
+}
+.channel-topic-bar .topic-text {
+    font-weight: bold;
+    color: #811511; /* Slightly brighter green for the topic text */
+    
+}
+
+/* --- FIX: Upload Modal Form Spacing --- */
+.upload-modal-content .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Adds a small space between label, input, and text */
+}
+
+.upload-modal-content .form-group small {
+    margin-top: 12px; /* Increase space above to prevent perceived overlap with input */
+    margin-bottom: 12px; /* Keep space below the helper text */
+}
+
+/* --- Image Lobby Modal --- */
+.image-lobby-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1001; /* Above notes modal */
+    display: none; justify-content: center; align-items: center;
+    padding: 20px; box-sizing: border-box;
+    backdrop-filter: blur(5px);
+}
+
+.image-lobby-modal-content {
+    background: #1a1a1a; color: #e0e0e0; padding: 25px 35px;
+    border-radius: 8px; border: 1px solid #cc0000;
+    box-shadow: 0 0 25px rgba(204, 0, 0, 0.6);
+    width: 90%; max-width: 1000px;
+    height: 90vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.image-lobby-modal-content h2 { margin-top: 0; color: #ff3333; }
+
+.close-lobby-button {
+    position: absolute; top: 10px; right: 15px; font-size: 2em;
+    font-weight: bold; color: #aaa; cursor: pointer; line-height: 1; text-decoration: none;
+}
+
+#toggle-lobby-checkbox:checked ~ .chat-container .image-lobby-modal-overlay {
+    display: flex;
+}
+
+.image-lobby-grid {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    padding: 5px;
+}
+
+.image-lobby-item {
+    display: block;
+    text-decoration: none;
+    color: #e0e0e0;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    position: relative;
+}
+.image-lobby-item:hover {
+    transform: scale(1.03);
+    border-color: #cc0000;
+    box-shadow: 0 0 10px rgba(204, 0, 0, 0.5);
+}
+
+.image-lobby-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+}
+
+.image-lobby-info {
+    padding: 10px;
+}
+
+.image-lobby-info strong {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9em;
+}
+
+.image-lobby-info span {
+    display: block;
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 5px;
+}
+/* --- Widen container for the main gallery grid --- */
+.gallery-grid-container {
+    width: 80%;
+    max-width: 1800px; /* A high max-width for large screens */
+}
+/* ======================================================== */
+/* ACCORDION – list styling inside the content panel       */
+/* ======================================================== */
+details.admin-section .section-content ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+details.admin-section .section-content ul li {
+  margin-bottom: 4px;
+  /* optional: give codes a monospace font too */
+  font-family: 'Courier New', Courier, monospace;
+}
+/* This new wrapper will hold the glow effect and center the container */
+.glow-wrapper {
+    position: relative;
+    width: 95%;
+    max-width: 1200px;
+    height: 95vh;
+    /* Add flex properties to center the child .chat-container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* --- NEW: ASCII Art Block --- */
+.ascii-block {
+    background-color: #000;
+    border: 1px solid #444;
+    padding: 15px;
+    margin-top: 5px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.7);
+    font-family: 'Courier Prime', monospace, 'Lucida Console', 'Monaco';
+    font-size: 1.1em; /* Slightly larger for visibility */
+    color: #ff5555; /* Rot-Chat Red */
+    white-space: pre; /* This is critical for preserving whitespace */
+    overflow-x: auto; /* Allow horizontal scrolling for very wide art */
+    line-height: 1.1; /* Tighter line height for better art rendering */
+}
+/* --- Secret Multi-line Toggle Styles --- */
+.input-wrapper {
+    flex-grow: 1;
+    position: relative;
+    height: 40px; /* Match the button height */
+}
+
+.message-input {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box; /* Ensures padding is included in height */
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0; /* Hidden by default */
+    pointer-events: none; /* Not clickable by default */
+    transition: opacity 0.2s ease;
+}
+
+.single-line-input {
+    opacity: 1; /* Show single-line by default */
+    pointer-events: auto;
+    z-index: 2;
+}
+
+#multiline-toggle:checked ~ .message-form .single-line-input {
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#multiline-toggle:checked ~ .message-form .multi-line-input {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 2;
+}
+
+.multi-line-input {
+    resize: none;
+    line-height: 1.4;
+    padding: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.toggle-multiline-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4em;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.toggle-multiline-btn:hover {
+    background: #444;
+    color: #fff;
+    border-color: #ff5555;
+}
+
+#multiline-toggle:checked ~ .message-form .toggle-multiline-btn {
+    background-color: #610000;
+    color: #ffc2c2;
+    border-color: #990000;
+}
+/* --- NEW BATCH: Custom Username Effects --- */
+
+/* Effect 1: A slow, pulsing, fiery effect */
+@keyframes molten-core-glow {
+  0%, 100% {
+    color: #ff8c00; /* DarkOrange */
+    text-shadow: 0 0 5px #ff4500, 0 0 10px #ff4500, 0 0 15px #dc143c;
+  }
+  50% {
+    color: #ff4500; /* OrangeRed */
+    text-shadow: 0 0 7px #ff4500, 0 0 15px #dc143c, 0 0 20px #dc143c;
+  }
+}
+.username-molten-core {
+  font-weight: bold;
+  animation: molten-core-glow 4s infinite ease-in-out;
+}
+
+/* Effect 2: Rapid static jitter with a light blue glow */
+@keyframes static-shock-flicker {
+  0%, 100% { transform: translate(0, 0); text-shadow: 0 0 2px #add8e6; }
+  10% { transform: translate(1px, -1px); }
+  20% { transform: translate(-1px, 1px); text-shadow: 0 0 3px #add8e6, 0 0 5px #ffffff; }
+  30% { transform: translate(1px, 1px); }
+  40% { transform: translate(-1px, -1px); }
+  50% { transform: translate(0, 0); text-shadow: 0 0 2px #add8e6; }
+}
+.username-static-shock {
+  color: #f0f8ff; /* AliceBlue */
+  animation: static-shock-flicker 0.2s infinite steps(1, end);
+}
+
+/* Effect 3: Smooth, flowing color change through the rainbow spectrum */
+@keyframes rainbow-wave-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.username-rainbow-wave {
+    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: bold;
+    animation: rainbow-wave-flow 6s ease infinite;
+}
+
+/* Effect 4: A blinking cursor at the end of the name */
+@keyframes blink-cursor {
+  from, to { border-color: transparent; }
+  50% { border-color: #00ff00; } /* A green terminal-like cursor */
+}
+.username-typewriter {
+  position: relative;
+  display: inline-block;
+}
+.username-typewriter::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 4px;
+  border-right: 3px solid #00ff00;
+  animation: blink-cursor 1s step-end infinite;
+}
+
+/* Effect 5: Fading colored text-shadows creating an echo */
+@keyframes fading-echoes {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0);
+  }
+  25% {
+    text-shadow: 5px 0px 0px rgba(255, 85, 85, 0.4),
+                 10px 0px 0px rgba(85, 255, 85, 0.3),
+                 15px 0px 0px rgba(85, 85, 255, 0.2);
+  }
+  75% {
+    text-shadow: 5px 0px 0px rgba(255, 85, 85, 0),
+                 10px 0px 0px rgba(85, 255, 85, 0),
+                 15px 0px 0px rgba(85, 85, 255, 0);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0);
+  }
+}
+.username-fading-echoes {
+  animation: fading-echoes 3s infinite linear;
+}
+
+/* Effect 6: A white light effect that sweeps across the text */
+@keyframes spotlight-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.username-spotlight-sweep {
+  position: relative;
+  background: linear-gradient(to right,
+    currentColor 30%,
+    #ffffff 50%,
+    currentColor 70%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: spotlight-sweep 3s linear infinite;
+}
+/* --- NEW BATCH: Slow & Subtle Username Effects --- */
+
+/* Effect 1: A slow, shifting aurora of cool colors */
+@keyframes aurora-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.username-aurora {
+  font-weight: bold;
+  background: linear-gradient(90deg, #3aeffd, #5892f3, #7648f5, #932bf0, #7648f5, #5892f3, #3aeffd);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: aurora-flow 10s ease-in-out infinite;
+}
+
+/* Effect 2: A gentle, slow pulse that works with any user color */
+@keyframes breathing-glow {
+  0%, 100% {
+    text-shadow: 0 0 4px currentColor, 0 0 6px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 10px currentColor, 0 0 15px rgba(255, 255, 255, 0.5);
+  }
+}
+.username-breathing-glow {
+  animation: breathing-glow 6s infinite ease-in-out;
+}
+
+/* Effect 3: A slow, ghostly fade in and out */
+@keyframes slow-fade-in-out {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1.0;
+  }
+}
+.username-slow-fade {
+  animation: slow-fade-in-out 8s infinite ease-in-out;
+}
+/* --- NEW BATCH: Gentle Username Effects --- */
+
+/* Effect 1: A slow, shifting aurora of cool colors */
+@keyframes aurora-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.username-aurora {
+  font-weight: bold;
+  background: linear-gradient(90deg, #3aeffd, #5892f3, #7648f5, #932bf0, #7648f5, #5892f3, #3aeffd);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: aurora-flow 10s ease-in-out infinite;
+}
+
+/* Effect 2: A gentle, slow pulse that works with any user color */
+@keyframes breathing-glow {
+  0%, 100% {
+    text-shadow: 0 0 4px currentColor, 0 0 6px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 10px currentColor, 0 0 15px rgba(255, 255, 255, 0.5);
+  }
+}
+.username-breathing-glow {
+  animation: breathing-glow 6s infinite ease-in-out;
+}
+
+/* Effect 3: A slow, ghostly fade in and out */
+@keyframes slow-fade-in-out {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1.0;
+  }
+}
+.username-slow-fade {
+  animation: slow-fade-in-out 8s infinite ease-in-out;
+}
+
+/* Effect 4: A white light effect that sweeps across the text */
+@keyframes spotlight-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.username-spotlight-sweep {
+  position: relative;
+  background: linear-gradient(to right,
+    currentColor 30%,
+    #ffffff 50%,
+    currentColor 70%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: spotlight-sweep 3s linear infinite;
+}
+
+/* Effect 5: Digital Matrix style text flow */
+@keyframes matrix-rain-flow {
+  0%   { background-position: 50% 0%; }
+  100% { background-position: 50% 100%; }
+}
+.username-matrix-flow {
+  background: linear-gradient(to bottom, #7FFF00, #3a3, #008000, #3a3, #7FFF00);
+  background-size: 100% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: bold;
+  animation: matrix-rain-flow 3s infinite linear;
+}
+/* --- NEW BATCH: Wobble & Cooler Animations --- */
+
+/* Effect 1: A subtle, squishy jelly wobble effect */
+@keyframes jelly-wobble-anim {
+  0%, 100% { transform: scale(1, 1); }
+  25% { transform: scale(1.1, 0.9) rotate(-2deg); }
+  50% { transform: scale(0.95, 1.05); }
+  75% { transform: scale(1.05, 0.95) rotate(2deg); }
+}
+.username-jelly-wobble {
+  display: inline-block; /* Required for transform to work properly */
+  animation: jelly-wobble-anim 3s infinite ease-in-out;
+}
+
+/* Effect 2: An unstable, heatwave/underwater distortion effect */
+@keyframes unstable-distortion-anim {
+  0%, 100% { transform: skewX(0deg) skewY(0deg); opacity: 0.9; }
+  25% { transform: skewX(2deg) skewY(-2deg); opacity: 1; }
+  75% { transform: skewX(-2deg) skewY(2deg); opacity: 0.8; }
+}
+.username-unstable-distortion {
+  display: inline-block; /* Required for transform to work properly */
+  animation: unstable-distortion-anim 5s infinite ease-in-out;
+}
+
+/* Effect 3: A classic, flickering neon sign effect */
+@keyframes neon-flicker-anim {
+  0%, 100% {
+    text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 20px #ff00de, 0 0 30px #ff00de;
+    opacity: 1;
+  }
+  50% {
+    text-shadow: 0 0 2px currentColor, 0 0 5px currentColor, 0 0 10px #ff00de, 0 0 15px #ff00de;
+    opacity: 0.8;
+  }
+}
+.username-neon-flicker {
+  font-weight: bold;
+  animation: neon-flicker-anim 2s infinite alternate ease-in-out;
+}
+/* --- NEW BATCH: 10 Advanced & Complex Animations --- */
+
+/* 1. 3D Anaglyph (Red/Cyan 3D Glass Effect) */
+@keyframes anaglyph-shift-anim {
+  0%, 100% { text-shadow: -2px 0 #ff3333, 2px 0 #00ffff; }
+  50% { text-shadow: -3px 0 #ff3333, 3px 0 #00ffff; }
+}
+.username-anaglyph {
+  animation: anaglyph-shift-anim 4s infinite ease-in-out;
+}
+
+/* 2. Burning Embers Effect */
+@keyframes burning-embers-anim {
+  0%, 100% {
+    color: #ffddba;
+    text-shadow: 0 0 5px #ff4500, 0 0 10px #ff4500, 0 0 20px #ff0000, 0 0 40px #000;
+  }
+  50% {
+    color: #ffedde;
+    text-shadow: 0 0 7px #ff4500, 0 0 15px #ff4500, 0 0 25px #ff0000, 0 0 45px #000;
+  }
+}
+.username-burning-embers {
+  font-weight: bold;
+  animation: burning-embers-anim 3s infinite linear;
+}
+
+/* 3. Cosmic Nebula (Gradient Flow) */
+@keyframes cosmic-flow-anim {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.username-cosmic-nebula {
+  font-weight: bold;
+  background: linear-gradient(125deg, #ff33a8, #7648f5, #3aeffd, #5892f3, #ff33a8);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: cosmic-flow-anim 12s ease-in-out infinite;
+}
+
+/* 4. Glitchy Scanline Effect */
+@keyframes scanline-anim {
+  0% { top: -10%; }
+  100% { top: 110%; }
+}
+@keyframes text-jitter-anim {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(1px, -1px); }
+}
+.username-glitch-scanline {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  animation: text-jitter-anim 0.2s infinite steps(1, end);
+}
+.username-glitch-scanline::before {
+  content: '';
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  height: 3px;
+  background-color: #00ff00;
+  box-shadow: 0 0 10px #00ff00;
+  animation: scanline-anim 2.5s infinite linear;
+}
+
+/* 5. Liquid Metal Glow */
+@keyframes liquid-metal-anim {
+  0%, 100% { filter: blur(1px); opacity: 0.8; }
+  50% { filter: blur(2px); opacity: 1; }
+}
+.username-liquid-metal {
+  display: inline-block;
+  background: #d3d3d3;
+  color: #fff;
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #00aaff;
+  animation: liquid-metal-anim 4s infinite ease-in-out;
+}
+
+/* 6. Arcane Rune Glow */
+@keyframes arcane-glow-anim {
+  0%, 100% { text-shadow: 0 0 5px #fff, 0 0 10px #da70d6, 0 0 15px #da70d6, 0 0 20px #8a2be2; }
+  50% { text-shadow: 0 0 8px #fff, 0 0 15px #da70d6, 0 0 25px #da70d6, 0 0 30px #8a2be2; }
+}
+.username-arcane-rune {
+  color: #f0e6fa;
+  font-weight: bold;
+  animation: arcane-glow-anim 4s infinite ease-in-out;
+}
+
+/* 7. Gradient Wipe Text Reveal */
+@keyframes gradient-wipe-anim {
+  0% { background-position: 150% 0; }
+  100% { background-position: -50% 0; }
+}
+.username-gradient-wipe {
+  background: linear-gradient(to left, transparent 40%, #ff5555 60%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-wipe-anim 4s infinite linear;
+}
+
+/* 8. Inverted Shockwave Pulse */
+@keyframes shockwave-anim {
+  0% { background-size: 0% 0%; }
+  50% { background-size: 100% 100%; opacity: 1; }
+  99% { opacity: 0; }
+  100% { background-size: 100% 100%; opacity: 0;}
+}
+.username-shockwave {
+  background: radial-gradient(circle, #000 20%, currentColor 21%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: shockwave-anim 3s infinite ease-out;
+}
+
+/* 9. VCR Playback Error */
+@keyframes vcr-error-anim {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.username-vcr-error {
+  position: relative;
+  display: inline-block;
+  color: #00ffff;
+  text-shadow: 0 0 2px #00ffff;
+}
+.username-vcr-error::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  opacity: 0.5;
+  animation: vcr-error-anim 0.2s infinite steps(2, end);
+}
+
+/* 10. Hacked Text Scramble */
+@keyframes hacked-scramble-anim {
+  0% { content: "H@CK3D"; }
+  10% { content: "L0G1N_"; }
+  20% { content: "SYST3M"; }
+  30% { content: "BR3ACH"; }
+  40% { content: "......"; }
+  50% { content: "R0T-CH"; }
+  60% { content: "ACCESS"; }
+  70% { content: "D3N1ED"; }
+  80% { content: "SECUR_"; }
+  90% { content: "W@RN1N"; }
+  100% { content: "######"; }
+}
+.username-hacked-scramble {
+  position: relative;
+  display: inline-block;
+}
+.username-hacked-scramble::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #ff3333;
+  background-color: #1a1a1a; /* Match chat background */
+  animation: hacked-scramble-anim 1s infinite steps(1, end);
+}
+/* --- NEW: Per-Character Style Rainbow Effect --- */
+
+@keyframes rainbow-scroll-anim {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.username-char-rainbow {
+  font-weight: bold;
+  background: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rainbow-scroll-anim 4s linear infinite;
+}
+/* --- NEW BATCH: 15 Glow & Minor Glitch Animations --- */
+
+/* 1. Subtle Text Shudder */
+@keyframes text-shudder-anim {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(0.5px, -0.5px); }
+  75% { transform: translate(-0.5px, 0.5px); }
+}
+.username-text-shudder {
+  display: inline-block;
+  animation: text-shudder-anim 0.1s infinite linear;
+}
+
+/* 2. Unstable Flickering Glow */
+@keyframes unstable-glow-anim {
+  0%, 100% { opacity: 0.8; text-shadow: 0 0 5px currentColor; }
+  50% { opacity: 1; text-shadow: 0 0 8px currentColor, 0 0 10px #fff; }
+}
+.username-unstable-glow {
+  animation: unstable-glow-anim 0.3s infinite ease-in-out;
+}
+
+/* 3. Cyberpunk Glitch (Neon + Jitter) */
+@keyframes cyberpunk-glitch-anim {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(2px, -1px); }
+  50% { transform: translate(0, 0); }
+  75% { transform: translate(-2px, 1px); }
+}
+.username-cyberpunk-glitch {
+  display: inline-block;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #00ffff;
+  animation: cyberpunk-glitch-anim 0.1s infinite steps(2, end);
+}
+
+/* 4. Haunted Echo (Fading, Jittering Shadow) */
+@keyframes haunted-echo-anim {
+  0% { text-shadow: 2px 2px 5px rgba(255, 85, 85, 0.3); }
+  100% { text-shadow: 3px 3px 5px rgba(85, 255, 255, 0.3); }
+}
+.username-haunted-echo {
+  animation: haunted-echo-anim 2s infinite alternate ease-in-out;
+}
+
+/* 5. Acidic Green Glow */
+.username-acidic-glow {
+  color: #abff00;
+  text-shadow: 0 0 5px #abff00, 0 0 10px #abff00, 0 0 15px #fff;
+}
+
+/* 6. Deep Space Slow Pulse */
+@keyframes deep-space-anim {
+  0%, 100% { text-shadow: 0 0 8px #4b0082, 0 0 12px #0000ff; }
+  50% { text-shadow: 0 0 12px #4b0082, 0 0 18px #0000ff; }
+}
+.username-deep-space-glow {
+  color: #e6e6fa; /* Lavender */
+  animation: deep-space-anim 6s infinite ease-in-out;
+}
+
+/* 7. Double Glow Pulse */
+@keyframes double-glow-anim-1 {
+  0%, 100% { text-shadow: 0 0 5px #ff5555; }
+  50% { text-shadow: 0 0 10px #ff5555; }
+}
+@keyframes double-glow-anim-2 {
+  0%, 100% { text-shadow: 0 0 10px #5555ff; }
+  50% { text-shadow: 0 0 5px #5555ff; }
+}
+.username-double-glow::before, .username-double-glow::after {
+  content: attr(data-text); /* Requires PHP change to add data-text attribute */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.username-double-glow { display: inline-block; position: relative; }
+.username-double-glow::before { animation: double-glow-anim-1 3s infinite linear; }
+.username-double-glow::after { animation: double-glow-anim-2 3s infinite linear reverse; }
+
+
+/* 8. Focus Glitch (Blur to Sharp) */
+@keyframes focus-glitch-anim {
+  0%, 100% { filter: blur(1.5px); text-shadow: -1px 0 #ff5555, 1px 0 #00ffff; }
+  5% { filter: blur(0); text-shadow: none; }
+}
+.username-focus-glitch {
+  display: inline-block;
+  animation: focus-glitch-anim 4s infinite ease-in-out;
+}
+
+/* 9. Bad Signal (Opacity Fade + Horizontal Jitter) */
+@keyframes bad-signal-anim {
+  0%, 100% { transform: translateX(0); opacity: 1; }
+  50% { transform: translateX(2px); opacity: 0.6; }
+}
+.username-bad-signal {
+  display: inline-block;
+  animation: bad-signal-anim 0.5s infinite linear;
+}
+
+/* 10. Hologram Flicker */
+@keyframes hologram-scanline-anim {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+.username-hologram-flicker {
+  display: inline-block;
+  position: relative;
+  opacity: 0.8;
+  color: #00ffff;
+  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+}
+.username-hologram-flicker::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  opacity: 0.4;
+  animation: hologram-scanline-anim 3s infinite linear;
+}
+
+/* 11. Overcharged Pulse (Glow + Jitter) */
+@keyframes overcharged-pulse-anim {
+  0%, 100% { transform: scale(1); text-shadow: 0 0 5px #fff, 0 0 10px #ffff00; }
+  50% { transform: scale(1.05); text-shadow: 0 0 10px #fff, 0 0 20px #ffff00; }
+}
+.username-overcharged-pulse {
+  display: inline-block;
+  animation: overcharged-pulse-anim 1s infinite ease-in-out;
+}
+
+/* 12. Rainbow Glow (Shadow cycles through colors) */
+@keyframes rainbow-glow-anim {
+  0% { text-shadow: 0 0 8px #ff0000; }
+  16% { text-shadow: 0 0 8px #ff7f00; }
+  33% { text-shadow: 0 0 8px #ffff00; }
+  50% { text-shadow: 0 0 8px #00ff00; }
+  66% { text-shadow: 0 0 8px #0000ff; }
+  83% { text-shadow: 0 0 8px #9400d3; }
+  100% { text-shadow: 0 0 8px #ff0000; }
+}
+.username-rainbow-glow {
+  color: #fff;
+  animation: rainbow-glow-anim 4s infinite linear;
+}
+
+/* 13. Data Corruption (Flickering Block Characters) */
+@keyframes data-corruption-anim {
+  0% { content: "█"; opacity: 0.5; left: 10%;}
+  25% { content: "▒"; opacity: 0.3; left: 60%;}
+  50% { content: "▓"; opacity: 0.6; left: 40%;}
+  75% { content: "░"; opacity: 0.4; left: 80%;}
+  100% { content: "█"; opacity: 0.5; left: 20%;}
+}
+.username-data-corruption {
+  position: relative;
+  display: inline-block;
+}
+.username-data-corruption::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  color: #ff5555;
+  animation: data-corruption-anim 0.2s infinite steps(1, end);
+}
+
+/* 14. Channel Flicker (TV Static Effect) */
+@keyframes channel-flicker-anim {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; transform: translate(1px, 1px); }
+}
+.username-channel-flicker {
+  display: inline-block;
+  animation: channel-flicker-anim 0.05s infinite linear;
+}
+
+/* 15. Pixel Sort Glitch */
+@keyframes pixel-sort-anim {
+  0%, 100% { transform: scaleX(1); left: 0; }
+  50% { transform: scaleX(3); left: 10px; }
+}
+.username-pixel-sort-glitch {
+  position: relative;
+  display: inline-block;
+}
+.username-pixel-sort-glitch::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  opacity: 0.5;
+  animation: pixel-sort-anim 0.3s infinite ease-in-out;
+}
+/* --- NEW: User-Requested 3D Forest Effect --- */
+
+@keyframes forest-3d-anim {
+  0%, 100% {
+    text-shadow: 4px 0px 1px #006400, -2px 0px 1px #228B22;
+  }
+  50% {
+    text-shadow: 3px 0px 2px #006400, -3px 0px 2px #228B22;
+  }
+}
+
+.username-3d-forest {
+  font-weight: bold;
+  animation: forest-3d-anim 5s infinite ease-in-out;
+}
+/* --- NEW BATCH: 5 Smooth 3D CSS Effects --- */
+
+/* 1. Soft 3D Glow - A gentle, pulsing depth effect. */
+@keyframes soft-3d-glow-anim {
+  0%, 100% {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7), 0 0 5px currentColor;
+  }
+  50% {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7), 0 0 10px currentColor, 0 0 15px #fff;
+  }
+}
+.username-3d-glow {
+  animation: soft-3d-glow-anim 4s infinite ease-in-out;
+}
+
+/* 2. Inset Text - Makes the text look like it's pressed into the screen. */
+.username-3d-inset {
+  text-shadow: -1px -1px 1px rgba(0,0,0,0.8), 1px 1px 1px rgba(255,255,255,0.2);
+}
+
+/* 3. Floating Text - A slow, drifting shadow for a floating effect. */
+@keyframes float-anim {
+  0%, 100% { transform: translateY(0); text-shadow: 2px 4px 4px rgba(0,0,0,0.5); }
+  50% { transform: translateY(-2px); text-shadow: 2px 6px 6px rgba(0,0,0,0.5); }
+}
+.username-3d-float {
+  display: inline-block; /* Required for transform */
+  animation: float-anim 5s infinite ease-in-out;
+}
+
+/* 4. Dual Shadow - Uses two colored shadows for a retro 3D look. */
+.username-3d-dual-shadow {
+  text-shadow: 2px 2px 0px #ff3333, -2px -2px 0px #00ffff;
+}
+
+/* 5. Soft Letterpress - A clean, subtle pressed effect. */
+.username-3d-letterpress {
+  text-shadow: 0 1px 0 #000;
+}
+@keyframes wobbly-distortion-anim {
+  0%, 100% { 
+    transform: scale(1, 1) skewX(0deg) skewY(0deg); 
+  }
+  25% { 
+    transform: scale(1.1, 0.9) rotate(-2deg) skewX(2deg) skewY(-2deg); 
+  }
+  50% { 
+    transform: scale(0.95, 1.05) skewX(0deg) skewY(0deg); 
+  }
+  75% { 
+    transform: scale(1.05, 0.95) rotate(2deg) skewX(-2deg) skewY(2deg); 
+  }
+}
+@keyframes liquid-anaglyph-anim {
+  0%, 100% {
+    transform: skew(0deg, 0deg);
+    text-shadow: -1px 0px 2px rgba(255, 50, 50, 0.7), 1px 0px 2px rgba(50, 255, 255, 0.7);
+    filter: blur(0.5px);
+  }
+  50% {
+    transform: skew(1.5deg, -1.5deg);
+    text-shadow: 1px 0px 2px rgba(255, 50, 50, 0.7), -1px 0px 2px rgba(50, 255, 255, 0.7);
+    filter: blur(0.8px);
+  }
+}
+.username-liquid-anaglyph {
+  display: inline-block;
+  color: #f0f8ff; /* A slightly off-white for good contrast */
+  animation: liquid-anaglyph-anim 8s infinite ease-in-out;
+}
+@keyframes volcanic-fissure-anim {
+  0%, 100% {
+    transform: skew(0deg, 0deg);
+    text-shadow: -1px 0px 2px rgba(0, 140, 59, 0.7), 1px 0px 2px rgba(0, 59, 140, 0.7);
+    filter: blur(0.6px);
+  }
+  50% {
+    transform: skew(-1.5deg, 1.5deg);
+    text-shadow: 1px 0px 2px rgba(0, 140, 59, 0.7), -1px 0px 2px rgba(0, 59, 140, 0.7);
+    filter: blur(0.9px);
+  }
+}
+.username-volcanic-fissure {
+  display: inline-block;
+  color: #D45500; /* Deep Orange */
+  font-weight: bold;
+  animation: volcanic-fissure-anim 7s infinite ease-in-out;
+}

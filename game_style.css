@@ -1,0 +1,150 @@
+/* game_style.css - (ROT-CHAT THEME) */
+
+/* --- Variables (Rot-Chat Red Theme) --- */
+:root {
+    /* Color Palette matching style.css */
+    --bg-color: #111;
+    --text-color: #e0e0e0;
+    --heading-color: #ff5555; /* Rot-Chat Red */
+    --muted-text-color: #999;
+    --card-bg: rgba(0, 0, 0, 0.4);
+    --border-color: #444;
+    --accent-color: #cc0000; /* Primary Red */
+    --accent-hover-color: #ff3333; /* Brighter Red */
+
+    /* Game Specific Vars using Rot-Chat Theme */
+    --dot-size: 10px;
+    --line-width: 60px;
+    --line-thickness: 4px;
+    --line-color: #555; /* Grey for available lines */
+    --line-hover-brightness: 1.5;
+    /* --- NEW: Brighter Player Colors --- */
+    --p1-color: #ff3333; /* Bright Red */
+    --p2-color: #33ff77; /* Bright Green */
+    --box-claimed-opacity: 0.6;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* --- General Elements within Game Frame --- */
+.btn {
+    display: inline-block; padding: 0.6rem 1.2rem; font-family: 'Roboto', sans-serif;
+    background-color: #333; border: 1px solid var(--border-color);
+    color: var(--text-color); font-weight: 600; border-radius: 5px; cursor: pointer;
+    text-decoration: none; text-align: center;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+.btn:hover { background-color: var(--accent-color); border-color: var(--accent-hover-color); color: #fff; }
+
+/* --- Lobby Styles --- */
+/* --- Lobby Styles (Corrected Layout) --- */
+.project-modal {
+    background-color: var(--card-bg); color: var(--text-color);
+    padding: 1.5rem 2rem; border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+.project-modal h2 {
+    margin-top: 0; margin-bottom: 1.5rem; color: var(--heading-color);
+    font-size: 1.4em; font-family: 'Courier Prime', monospace;
+    border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;
+}
+.project-modal form { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem; }
+.project-modal label { margin-right: 0.5rem; color: var(--muted-text-color); }
+.project-modal select {
+    padding: 0.5rem 1rem; font-family: 'Roboto', sans-serif; background-color: #222;
+    border: 1px solid var(--border-color); color: var(--text-color); border-radius: 5px; cursor: pointer;
+}
+.project-modal ul { list-style: none; padding: 0; margin: 0; }
+.project-modal li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    background-color: rgba(0,0,0,0.3);
+}
+.project-modal li .game-info {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5;
+    font-size: 0.95em;
+}
+.project-modal li .game-info strong {
+    color: var(--p1-color);
+    font-weight: bold;
+    margin-right: 0.5em;
+}
+.project-modal li .btn {
+    flex-shrink: 0;
+}
+.project-modal p { text-align: center; color: var(--muted-text-color); margin-top: 1rem; }
+/* --- Game Page Styles --- */
+.game-wrapper { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.scoreboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent; /* Makes the background flat */
+    padding: 0.5rem 1rem; /* Reduced padding */
+    border-bottom: 1px solid var(--border-color); /* A simple line separator */
+    width: 100%;
+    box-sizing: border-box;
+    gap: 1rem;
+}
+.score-box {
+    text-align: center; padding: 0.5rem 1rem; border-radius: 6px;
+    min-width: 100px; flex-basis: 100px; flex-grow: 1; border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+.score-box .label { font-size: 0.85em; color: var(--muted-text-color); margin-bottom: 0.25rem; }
+.score-box .value { font-size: 1.5em; font-weight: bold; }
+.score-box.p1 .value { color: var(--p1-color); }
+.score-box.p2 .value { color: var(--p2-color); }
+.score-box.current-turn { border-color: var(--accent-color); box-shadow: 0 0 8px var(--accent-color); }
+.status-message {
+    font-size: 1.1em; color: #fff; font-weight: 500; text-align: center;
+    flex-grow: 2; flex-basis: 150px; padding: 0 1rem;
+}
+.controls { display: flex; gap: 1rem; justify-content: center; width: 100%; flex-wrap: wrap; }
+.controls .btn { padding: 0.5rem 1rem; font-size: 0.9em; }
+
+/* --- BOARD ELEMENT STYLES --- */
+.board-table { border-collapse: collapse; user-select: none; table-layout: fixed; margin: 0 auto; }
+.cell { padding: 0; margin: 0; text-align: center; vertical-align: middle; position: relative; }
+.dot {
+    width: var(--dot-size); height: var(--dot-size); background-color: var(--muted-text-color);
+    border-radius: 50%; display: inline-block; box-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+.h-line-cell { width: var(--line-width); height: var(--dot-size); }
+.v-line-cell { width: var(--dot-size); height: var(--line-width); }
+.line { display: block; transition: all 0.15s ease; }
+.h-line { height: var(--line-thickness); width: 100%; border-radius: calc(var(--line-thickness) / 2); }
+.v-line { width: var(--line-thickness); height: 100%; border-radius: calc(var(--line-thickness) / 2); margin: 0 auto; }
+/* Line States */
+.line { background-color: var(--line-color); }
+.line.taken { cursor: default; }
+.line.taken.p1 { background-color: var(--p1-color); }
+.line.taken.p2 { background-color: var(--p2-color); }
+a > .line.available { background-color: var(--line-color); cursor: pointer; }
+a:hover > .line.available {
+    /* Remove the generic filter and just use opacity for the player's color */
+    opacity: 0.7;
+}
+a:hover > .line.available.p1 { background-color: var(--p1-color); }
+a:hover > .line.available.p2 { background-color: var(--p2-color); }
+/* Boxes */
+.box {
+    width: var(--line-width); height: var(--line-width); position: relative;
+    font-size: calc(var(--line-width) * 0.4); font-weight: bold; line-height: var(--line-width);
+    color: #111; transition: all 0.2s ease;
+    text-transform: uppercase; overflow: hidden; background-color: transparent;
+}
+.box.claimed { opacity: var(--box-claimed-opacity); }
+.box.claimed.p1 { background-color: var(--p1-color); }
+.box.claimed.p2 { background-color: var(--p2-color); }

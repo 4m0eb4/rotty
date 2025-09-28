@@ -1,0 +1,627 @@
+/* admin_style.css (V20 - Patched for Global Compatibility) */
+/* admin_style.css (V20 - Patched for Global Compatibility) */
+
+:root {
+    --bg-color: #111;
+    --primary-text: #e0e0e0;
+    --red-text: #ff5555;
+    --red-accent: #cc0000;
+    --red-accent-hover: #ff3333;
+    --red-glow: rgba(204, 0, 0, 0.5);
+    --dark-bg: #1a1a1a;
+    --border-color: #333;
+    --header-border-color: #444;
+    --link-color: #ff8888;
+    --link-hover-color: #fff;
+    --success-bg: #004d00;
+    --success-text: #c2ffc2;
+    --success-border: #009900;
+    --danger-bg: #610000;
+    --danger-text: #ffc2c2;
+    --danger-border: #990000;
+    /* New variable for kick log entry background */
+    --kick-log-bg: #221a1a;
+    /* New variable for kick log summary hover */
+    --kick-log-hover-bg: #332a2a;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--primary-text);
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-image: url('https://www.transparenttextures.com/patterns/binary.png');
+    background-attachment: fixed;
+}
+
+/* --- Base container for standalone pages (feedback, gallery, etc.) --- */
+.admin-container {
+    margin: 0 auto;
+    background: var(--dark-bg);
+    border-radius: 8px;
+    border: 1px solid var(--red-accent);
+    padding: 20px;
+    box-shadow: 0 0 20px var(--red-glow);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--red-accent);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    margin: 0;
+    color: var(--red-text);
+    font-family: 'Courier Prime', monospace;
+    text-transform: uppercase;
+}
+
+.back-link {
+    color: var(--link-color);
+    text-decoration: none;
+    background: var(--border-color);
+    padding: 8px 15px;
+    border-radius: 4px;
+    border: 1px solid #555;
+    transition: all 0.2s ease;
+    font-weight: bold;
+}
+.back-link:hover { background-color: var(--header-border-color); color: var(--link-hover-color); border-color: var(--red-accent-hover); }
+
+
+/* --- NEW LAYOUT FOR THE TABBED ADMIN PANEL --- */
+/* This ensures the flex layout only applies when the body has the special class from admin.php */
+body.admin-panel-layout {
+    display: flex;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.admin-panel-layout .admin-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+.admin-nav {
+    flex: 0 0 220px; /* Slightly narrower width */
+    background: var(--dark-bg);
+    border-right: 1px solid var(--header-border-color);
+    padding: 15px 10px; /* Reduced padding */
+    box-sizing: border-box;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-nav .admin-header {
+    border-bottom: 2px solid var(--red-accent);
+    text-align: center;
+    padding-bottom: 10px; /* Added padding */
+    margin-bottom: 10px;  /* Added margin */
+}
+
+/* Navigation Menu */
+.nav-menu { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+.nav-menu li { margin-bottom: 2px; } /* Reduced margin */
+.nav-menu a { display: block; padding: 8px 15px; color: var(--primary-text); text-decoration: none; border-radius: 4px; font-weight: bold; transition: all 0.2s ease; border-left: 3px solid transparent; } /* Reduced padding */
+.nav-menu a:hover { background-color: rgba(255, 255, 255, 0.05); }
+.nav-menu a.active { background-color: rgba(204, 0, 0, 0.2); color: #fff; border-left-color: var(--red-accent); }
+
+/* Main Content Area */
+.admin-main {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 25px;
+}
+
+/* --- THE KEY FIX --- */
+/* This rule now ONLY hides sections inside the new admin panel's main content area. */
+/* It will NOT affect sections on other pages like gallery.php */
+.admin-main > .admin-section {
+    display: none;
+}
+.admin-main > .admin-section.active {
+    display: block;
+}
+
+
+/* --- Shared Form, Table, and Component Styles --- */
+.admin-section h2 { margin-top: 0; border-bottom: 1px solid var(--header-border-color); padding-bottom: 10px; color: var(--red-text); font-family: 'Courier Prime', monospace; }
+.admin-section p { line-height: 1.6; }
+
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: bold; }
+select, input[type="text"], input[type="number"], textarea { padding: 10px; border: 1px solid var(--danger-border); border-radius: 5px; background-color: #222; color: var(--primary-text); width: 100%; box-sizing: border-box; font-size: 1em; }
+select:focus, input:focus, textarea:focus { border-color: var(--red-accent-hover); box-shadow: 0 0 8px var(--red-glow); outline: none; }
+textarea { resize: vertical; min-height: 80px; }
+
+button, .btn {
+    cursor: pointer;
+    background-color: var(--border-color); /* CHANGED to neutral */
+    color: var(--primary-text);           /* CHANGED to neutral */
+    border: 1px solid #555;               /* CHANGED to neutral */
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    text-decoration: none; /* Added for <a> tags */
+    display: inline-block; /* Added for <a> tags */
+}
+
+/* New hover for neutral buttons, ignoring colored ones */
+button:hover, .btn:not(.success-btn):not(.danger-btn):not(.nuke-btn):hover {
+    background-color: var(--header-border-color);
+    border-color: var(--red-accent);
+    color: var(--link-hover-color);
+}
+
+/* NEW class for green buttons */
+.success-btn {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+    border-color: var(--success-border);
+}
+
+/* Hover effect for specific colored buttons */
+.success-btn:hover, .danger-btn:hover, .nuke-btn:hover {
+    filter: brightness(1.2);
+}
+
+.danger-btn { background-color: var(--danger-bg); color: var(--danger-text); border-color: var(--danger-border); }
+.nuke-btn { background-color: #8b0000; color: #fff; border-color: #ff0000; }
+
+.table-container {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    overflow-y: auto;
+    /* This makes the container's height responsive to the screen size */
+    max-height: calc(100vh - 320px);
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.user-management-table { width: 100%; border-collapse: collapse; }
+.user-management-table th { background-color: #2a2a2a; color: var(--red-text); padding: 12px; text-align: left; text-transform: uppercase; font-size: 0.9em; position: sticky; top: 0; z-index: 1; }
+.user-management-table td { padding: 12px; border-bottom: 1px solid var(--border-color); }
+.user-manageme.table-container {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    overflow-x: auto; /* Lets the table scroll horizontally ONLY if absolutely needed */
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.user-management-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* This is the key fix to prevent content from expanding the table */
+}
+.user-management-table th {
+    background-color: #2a2a2a;
+    color: var(--red-text);
+    padding: 12px;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+.user-management-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    word-wrap: break-word; /* This allows long text to wrap to a new line */
+}
+.user-management-table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+.user-management-table tbody tr:hover {
+    background-color: rgba(204, 0, 0, 0.15);
+}nt-table tbody tr:nth-child(even) { background-color: rgba(255, 255, 255, 0.03); }
+.user-management-table tbody tr:hover { background-color: rgba(204, 0, 0, 0.15); }
+
+.feedback-message { padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid; text-align: center; font-weight: bold; }
+.feedback-message.success { background-color: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
+
+hr { border: none; border-top: 1px solid var(--border-color); margin: 25px 0; }
+/* --- FINAL: Image Viewer Layout & Comment Styling --- */
+
+/* Main viewer layout */
+.image-stats-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    gap: 15px 30px;
+    padding: 12px;
+    background-color: rgba(0,0,0,0.2);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    margin-top: -20px;
+    margin-bottom: 25px;
+}
+.image-stats-bar .stat {
+    font-size: 0.95em;
+    color: #aaa;
+}
+.image-stats-bar .stat strong {
+    color: #fff;
+    font-weight: bold;
+}
+.comment-sort-options {
+    text-align: left;
+    margin-bottom: 15px;
+}
+.comment-sort-options a {
+    margin-left: 15px;
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+.comment-sort-options a.active {
+    color: var(--link-hover-color);
+    text-decoration: underline;
+}
+
+/* Base style for all comments */
+.comment-container {
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+/* Style for threaded (indented) replies */
+.comment-container .comment-container {
+    border-top: 1px solid #282828;
+    border-left: 2px solid #444; /* Add a clear vertical line for the thread */
+    padding-left: 15px;
+    background-image: linear-gradient(to right, rgba(0,0,0,0.1), transparent);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    color: var(--primary-text);
+}
+.comment-header strong { color: var(--link-color); }
+.comment-header small { color: #888; }
+.comment-body {
+    line-height: 1.5;
+    color: #ddd;
+    word-wrap: break-word;
+    font-size: 0.95em;
+    padding-bottom: 10px;
+}
+
+/* Actions bar at the bottom of a comment */
+.comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Reduced gap for a tighter look */
+}
+
+/* Container for the vote buttons and score */
+.vote-bar {
+    display: flex;
+    align-items: center;
+    background-color: #282828;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 2px;
+}
+.comment-actions .vote-btn {
+    padding: 1px 7px;
+    font-size: 1.1em; /* Make arrows slightly larger */
+    background: transparent;
+    border: none;
+}
+.comment-actions .vote-count {
+    font-size: 0.9em;
+    font-weight: bold;
+    padding: 0 5px;
+    min-width: 25px;
+    text-align: center;
+}
+.comment-actions .vote-btn.up:hover { color: #7f7; }
+.comment-actions .vote-btn.down:hover { color: #f77; }
+
+/* Container for Reply/Delete buttons */
+.management-actions {
+    margin-left: auto; /* Pushes this group to the far right */
+    display: flex;
+    gap: 10px;
+}
+.reply-toggle {
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 0.85em;
+    color: #aaa;
+    font-weight: bold;
+    padding: 4px 9px;
+    background-color: var(--border-color);
+    border-radius: 3px;
+    border: 1px solid #555;
+}
+.reply-toggle:hover {
+    background-color: var(--header-border-color);
+    color: #fff;
+}
+/* --- Gallery Grid Layout --- */
+.image-lobby-item {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    height: 100%; /* Ensure the link fills the grid cell */
+}
+.image-lobby-header {
+    padding: 10px;
+    background: #181818;
+    text-align: center;
+    font-size: 0.9em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+.image-lobby-item img {
+    width: 100%;
+    flex-grow: 1; /* Allow the image to expand and fill space */
+    object-fit: cover;
+    min-height: 0; /* Necessary for flexbox shrinking/growing */
+}
+.image-lobby-info {
+    padding: 10px;
+    background: #222;
+    flex-shrink: 0; /* Prevent footer from shrinking */
+}
+.image-lobby-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: #999;
+}
+/* Kick Logs Specific Styles */
+.kick-log-entry {
+    background-color: var(--kick-log-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    overflow: hidden; /* Ensures border-radius applies to children */
+}
+
+.kick-log-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    cursor: pointer;
+    background-color: var(--kick-log-bg);
+    border-bottom: 1px solid transparent; /* default */
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    font-weight: bold;
+}
+
+.kick-log-entry[open] .kick-log-summary {
+    background-color: var(--kick-log-hover-bg); /* Stays highlighted when open */
+    border-bottom-color: var(--red-accent);
+}
+
+.kick-log-summary:hover {
+    background-color: var(--kick-log-hover-bg);
+}
+
+.kick-log-summary strong {
+    color: var(--red-text);
+}
+
+.kick-log-summary small {
+    color: #aaa;
+    font-size: 0.85em;
+}
+
+.kick-log-details {
+    padding: 15px;
+    padding-top: 5px; /* Adjust top padding for a better flow after summary */
+    border-top: 1px solid var(--border-color);
+    background-color: var(--dark-bg);
+}
+
+.kick-log-details h4 {
+    color: var(--red-text);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px dotted var(--border-color);
+    padding-bottom: 5px;
+}
+
+.kick-log-details p {
+    margin-bottom: 8px;
+}
+
+.chat-history-box {
+    background-color: #0d0d0d;
+    border: 1px solid #2a2a2a;
+    border-radius: 4px;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9em;
+    color: #c0c0c0;
+}
+
+.chat-history-box div {
+    margin-bottom: 5px;
+}
+
+.chat-history-box strong {
+    color: var(--link-color);
+}
+/* Fix for guest management username list styling */
+.user-management-table td[style*="word-break: break-all"] {
+    color: var(--primary-text);
+    text-decoration: none;
+    font-weight: normal;
+}
+/* === Admin Dashboard Styles === */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--red-accent);
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.stat-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1em;
+    text-transform: uppercase;
+    color: var(--primary-text);
+}
+
+.stat-card p {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--red-text);
+}
+
+.dashboard-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.dashboard-column {
+    flex: 1;
+    min-width: 300px;
+}
+
+.dashboard-column h4 {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    color: var(--red-text);
+}
+
+.leaderboard-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.leaderboard-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-list li span:first-child {
+    font-weight: bold;
+}
+
+/* --- New Dashboard Styles --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.dashboard-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard-card {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.dashboard-card h3 {
+    margin-top: 0;
+    color: #ff5555;
+    border-bottom: 1px solid #555;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.stat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.95em;
+}
+
+.stat-list li {
+    margin-bottom: 10px;
+    color: #ccc;
+}
+
+.stat-list li strong {
+    color: #fff;
+    font-weight: bold;
+}
+
+.stat-list hr {
+    border: none;
+    border-top: 1px dashed #444;
+    margin: 15px 0;
+}
+
+.quick-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.quick-links .btn {
+    text-align: center;
+    padding: 10px;
+    display: block;
+    text-decoration: none;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+.quick-links .btn:hover {
+    background-color: #444;
+    border-color: #777;
+}
+
+.quick-links .danger-btn {
+    background-color: #4d0000;
+    border-color: #800;
+}
+
+.quick-links .danger-btn:hover {
+    background-color: #610000;
+}
